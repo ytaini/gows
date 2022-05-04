@@ -1,0 +1,6 @@
+[zwngkey] 2021/12/12 14:35:13.587063 main.go:18: 普通日志
+[zwngkey] 2021/12/12 14:35:13.587382 main.go:19: putong日志
+[zwngkey] 2021/12/12 14:35:13.587404 main.go:20: 123
+[zwngkey] 2021/12/12 14:35:41.151271 /Users/zhangwei/gows/src/ytaini.com/zwngkey/day02/08log_api/main.go:18: 普通日志
+[zwngkey] 2021/12/12 14:35:41.151499 /Users/zhangwei/gows/src/ytaini.com/zwngkey/day02/08log_api/main.go:19: putong日志
+[zwngkey] 2021/12/12 14:35:41.151521 /Users/zhangwei/gows/src/ytaini.com/zwngkey/day02/08log_api/main.go:20: 123

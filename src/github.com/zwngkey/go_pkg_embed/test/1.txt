@@ -1,0 +1,13 @@
+package gopkgembed
+
+import _ "embed"
+
+//go:embed eg14.go
+var s string
+
+//go:embed eg13.go
+var arr []byte
+
+func Testeg1() {
+	print(s)
+}
