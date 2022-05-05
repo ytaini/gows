@@ -1,16 +1,22 @@
+/*
+ * @Author: zwngkey
+ * @Date: 2022-04-27 08:15:17
+ * @LastEditors: zwngkey 18390924907@163.com
+ * @LastEditTime: 2022-05-06 03:16:47
+ * @Description:
+	time.NewTicker与time.Tick函数的使用
+
+*/
 package gopkgtime
 
 import (
 	"fmt"
 	"math/rand"
+	"testing"
 	"time"
 )
 
-/*
-	time.NewTicker与time.Tick函数的使用
-*/
-
-func Eg11() {
+func TestEg11(t *testing.T) {
 	ticker := time.NewTicker(5 * time.Second)
 	c := make(chan int, 5)
 
