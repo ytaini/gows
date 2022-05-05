@@ -123,7 +123,7 @@ func f2() {
 	fmt.Println(Any("[]time.Duration{d}"))
 }
 
-func Any(value interface{}) string {
+func Any(value any) string {
 	return formatAtom(reflect.ValueOf(value))
 }
 

@@ -10,11 +10,11 @@ import (
 type logLevel int
 
 type Logger interface {
-	Debug(msg string, a ...interface{})
-	Info(msg string, a ...interface{})
-	Warning(msg string, a ...interface{})
-	Error(msg string, a ...interface{})
-	Fatal(msg string, a ...interface{})
+	Debug(msg string, a ...any)
+	Info(msg string, a ...any)
+	Warning(msg string, a ...any)
+	Error(msg string, a ...any)
+	Fatal(msg string, a ...any)
 }
 
 const (

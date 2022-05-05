@@ -1,4 +1,5 @@
 package test_pointer
+
 //import "fmt"
 //
 //func main() {

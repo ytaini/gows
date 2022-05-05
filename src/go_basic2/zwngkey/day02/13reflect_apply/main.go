@@ -99,8 +99,8 @@ func main() {
 	fmt.Printf("res: %v\n", res)
 }
 
-func test1(a interface{}) interface{} {
+func test1(a any) any {
 	var temp reflect.Value = reflect.ValueOf(a)
-	var i interface{} = temp.Interface()
+	var i any = temp.Interface()
 	return i
 }

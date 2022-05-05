@@ -20,7 +20,7 @@ func main() {
 	testReflectFunc(test2, 1, 2, 3, 4, "string")
 }
 
-func testReflectFunc(call interface{}, args ...interface{}) {
+func testReflectFunc(call any, args ...any) {
 	val := reflect.ValueOf(call)
 
 	args1 := []reflect.Value{}

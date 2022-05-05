@@ -30,7 +30,7 @@ func (m *Monster) Set(name string, age int, score float32, sex string) {
 	m.Sex = sex
 }
 
-func TestStruct(a interface{}) {
+func TestStruct(a any) {
 	fmt.Printf("a: %T\n", a)
 	typ := reflect.TypeOf(a)
 	val := reflect.ValueOf(a)

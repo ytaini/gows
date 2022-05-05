@@ -37,7 +37,7 @@ func f1() {
 
 // 模拟fmt.print()
 // 当其他包调用这个函数时,他能把新创建的类型传进来,此时我们该如何判断形参的类型呢?
-func Sprint(x interface{}) string {
+func Sprint(x any) string {
 	type stringer interface {
 		String() string
 	}

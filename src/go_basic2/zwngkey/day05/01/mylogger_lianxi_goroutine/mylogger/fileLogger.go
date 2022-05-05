@@ -87,7 +87,7 @@ func (fl *FileLogger) initFile() error {
 	return nil
 }
 
-func (fl *FileLogger) log(ll logLevel, msg string, a ...interface{}) {
+func (fl *FileLogger) log(ll logLevel, msg string, a ...any) {
 	if fl.logLevel > ll {
 		return
 	}
@@ -112,18 +112,18 @@ func (fl *FileLogger) CloseErrLogFile() {
 	fl.errLogFile.Close()
 }
 
-func (fl *FileLogger) Debug(msg string, a ...interface{}) {
+func (fl *FileLogger) Debug(msg string, a ...any) {
 	fl.log(Debug, msg, a...)
 }
-func (fl *FileLogger) Info(msg string, a ...interface{}) {
+func (fl *FileLogger) Info(msg string, a ...any) {
 	fl.log(Info, msg, a...)
 }
-func (fl *FileLogger) Warning(msg string, a ...interface{}) {
+func (fl *FileLogger) Warning(msg string, a ...any) {
 	fl.log(Warning, msg, a...)
 }
-func (fl *FileLogger) Error(msg string, a ...interface{}) {
+func (fl *FileLogger) Error(msg string, a ...any) {
 	fl.log(Error, msg, a...)
 }
-func (fl *FileLogger) Fatal(msg string, a ...interface{}) {
+func (fl *FileLogger) Fatal(msg string, a ...any) {
 	fl.log(Fatal, msg, a...)
 }

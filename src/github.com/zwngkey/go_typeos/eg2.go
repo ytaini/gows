@@ -55,7 +55,7 @@ type D = int
 
 func TestEg25() {
 	var x D = 10
-	var y interface{} = x
+	var y any = x
 	switch y.(type) {
 	case int:
 		// case D: 重复了.
@@ -78,7 +78,7 @@ func TestEg24() {
 	fmt.Println(i)
 }
 
-type G = interface{}
+type G = any
 
 func TestEg23() {
 	var g G = "hello, go"

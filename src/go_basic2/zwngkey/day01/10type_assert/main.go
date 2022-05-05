@@ -15,7 +15,7 @@ func main() {
 	typeAssert(int8(8))
 }
 
-func typeAssert(a interface{}) {
+func typeAssert(a any) {
 	fmt.Println()
 	switch v := a.(type) {
 	case int:
