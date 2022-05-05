@@ -1,7 +1,7 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-03 02:18:08
- * @LastEditTime: 2022-05-04 02:26:57
+ * @LastEditTime: 2022-05-04 17:38:53
  * @Description: Go中三种一等公民容器类型：数组、切片和映射。
  */
 
@@ -1074,25 +1074,171 @@ func Test24(t *testing.T) {
 
 /*
 	删除一段切片元素
-
+		切片的元素在内存中是连续存储的，相邻元素之间是没有间隙的。所以，当切片的一个元素段被删除时，
+			如果剩余元素的次序必须保持原样，则被删除的元素段后面的每个元素都得前移。
+			如果剩余元素的次序不需要保持原样，则我们可以将尾部的一些元素移到被删除的元素的位置上。
 */
+
+//删除切片[from,to)的元素
+func DeleteSliceFromTo(s []int, from, to int) []int {
+	s = append(s[:from], s[to:]...)
+
+	// _ = s[:2+copy(s[2:], s[6:])]
+
+	// t0是类型T的零值字面量
+	var t0 int
+	// 如果切片的元素可能引用着其它值，则我们应该重置因为删除元素而多出来的元素槽位上的元素值，以避免暂时性的内存泄露
+	// "len(s)+to-from"是删除操作之前切片s的长度。
+	temp := s[len(s) : len(s)+to-from]
+	for i := range temp {
+		temp[i] = t0
+	}
+	return s
+}
+func Test25(t *testing.T) {
+	target := []int{1, 2, 3, 4, 5, 6, 7}
+	target = DeleteSliceFromTo(target, 2, 6)
+	fmt.Println(target)
+	// fmt.Println(target[:cap(target)])
+}
 
 /*
 	删除一个元素
 */
+func Test26(t *testing.T) {
+	target := []int{1, 2, 3, 4, 5, 6, 7}
+	//删除一个指定index的元素
+	i := 2
+	_ = append(target[:i], target[i+1:]...)
+	_ = target[:i+copy(target[i:], target[i+1:])]
+
+	// 第三种方法（不保持剩余元素的次序）：
+	// s[i] = s[len(s)-1]
+	// s = s[:len(s)-1]
+
+	// 如果切片的元素可能引用着其它值，则我们应该重置刚多出来的元素槽位上的元素值，以避免暂时性的内存泄露：
+	// s[len(s):len(s)+1][0] = t0
+	// // 或者
+	// s[:len(s)+1][len(s)] = t0
+}
 
 /*
 	条件性地删除切片元素
 
+	// 假设T是一个小尺寸类型。
+	func DeleteElements(s []T, keep func(T) bool, clear bool) []T {
+		// result := make([]T, 0, len(s))
+		result := s[:0] // 无须开辟内存
+		for _, v := range s {
+			if keep(v) {
+				result = append(result, v)
+			}
+		}
+		if clear { // 避免暂时性的内存泄露。
+			temp := s[len(result):]
+			for i := range temp {
+				temp[i] = t0 // t0是类型T的零值
+			}
+		}
+		return result
+	}
+
+	// 注意：如果T是一个大尺寸类型，请慎用T做为参数类型和使用双循环变量for-range代码块遍历元素类型为T的切片。
 */
 
 /*
 	将一个切片中的所有元素插入到另一个切片中
 */
+func Test27(t *testing.T) {
+	s := make([]int, 7, 20)
+	for i := range s {
+		s[i] = i
+	}
+	s1 := []int{10, 11, 12, 13}
+	i := 2
+
+	{
+		//下面两种方式可能最多导致两次内存开辟（最少一次）。
+
+		//不会修改s
+		s2 := append(append(s[:i:i], s1...), s[i:]...)
+		fmt.Println(s2)
+
+		//修改了s
+		// s3 := append(s[:i], append(s1, s[i:]...)...)
+		// fmt.Println(s3)
+
+		// Push（插入到结尾）。
+		s4 := append(s, s1...)
+		// Unshift（插入到开头）。
+		s5 := append(s1, s...)
+
+		_, _ = s4, s5
+	}
+
+	{
+		//这种方式最多只会导致一次内存开辟（最少零次）。
+		//此繁琐实现中的make调用将会把一些刚开辟出来的元素清零。这其实是没有必要的。
+		//所以此繁琐实现并非总是比上面的单行实现效率更高。事实上，它仅在处理小切片时更高效。
+		totalLen := len(s) + len(s1)
+		if cap(s) < totalLen {
+			x := make([]int, 0, totalLen)
+			x = append(x, s[:i]...)
+			x = append(x, s1...)
+			x = append(x, s[i:]...)
+			s = x
+		} else {
+			// s = append(s[:i+len(s1)], s[i:]...)
+			// s = append(s[:i], s1...)
+			// s = s[:totalLen]
+			s = s[:totalLen]
+			copy(s[i+len(s1):], s[i:])
+			copy(s[i:], s1)
+		}
+		fmt.Println(s)
+	}
+}
 
 /*
 	插入若干独立的元素
+		插入若干独立的元素和插入一个切片中的所有元素类似。
 */
+
+/*
+	特殊的插入和删除：前推/后推，前弹出/后弹出
+*/
+//
+func Push(target []int, eles ...int) []int {
+	return append(target, eles...)
+}
+func Pop(target []int) ([]int, int) {
+	temp := len(target) - 1
+	return target[:temp], target[temp]
+}
+func Shift(target []int) ([]int, int) {
+	return target[1:], target[0]
+}
+
+func Unshift(target []int, eles ...int) []int {
+	if cap(target) < len(target)+len(eles) {
+		return append(eles, target...)
+	}
+	target = target[:len(target)+len(eles)]
+	copy(target[1+len(eles):], target[1:])
+	copy(target[1:], target)
+	return target
+}
+func Test28(t *testing.T) {
+	a := []int{1, 2, 3}
+	b := []int{3, 4, 5}
+	// a = Push(a, b...)
+	// a, ele := Pop(a)
+	// a, ele := Shift(a)
+	// fmt.Println(a, ele)
+
+	a = Unshift(a, b...)
+	fmt.Println(a)
+}
 
 /*
 	上述各种容器操作内部都未同步
