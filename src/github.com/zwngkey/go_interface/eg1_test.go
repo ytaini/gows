@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-07 03:32:33
  * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-07 18:24:36
+ * @LastEditTime: 2022-05-09 20:19:17
  * @Description: go interface
  */
 package gointerface
@@ -16,7 +16,8 @@ import (
 /*
 	接口
 		接口类型是Go中的一种很特别的类型。接口类型在Go中扮演着重要的角色。
-			首先，在Go中，接口值可以用来包裹非接口值；然后，通过值包裹，反射和多态得以实现。
+			首先，在Go中，接口值可以用来包裹 非接口值；
+			  然后，通过值包裹，反射和多态得以实现。
 
 	什么是接口类型？
 		一个接口类型指定了一个方法原型的集合。 换句话说，一个接口类型定义了一个方法集。
@@ -533,4 +534,86 @@ type Iz interface {
 			1.比较一个非接口值和接口值；
 			2.比较两个接口值。
 
+		对于第一种情形，非接口值的类型必须实现了接口值的类型（假设此接口类型为I），
+			所以此非接口值可以被隐式转化为（包裹到）一个I值中。 这意味着非接口值和接口值的比较可以转化为两个接口值的比较。
+
+		比较两个接口值其实是比较这两个接口值的动态类型和和动态值。
+
+		下面是（使用==比较运算符）比较两个接口值的步骤：
+			1.如果其中一个接口值是一个nil接口值，则比较结果为另一个接口值是否也为一个nil接口值。
+			2.如果这两个接口值的动态类型不一样，则比较结果为false。
+			3.对于这两个接口值的动态类型一样的情形，
+				1.如果它们的动态类型为一个不可比较类型，则将产生一个恐慌。
+				2.否则，比较结果为它们的动态值的比较结果。
+
+		简而言之，两个接口值的比较结果只有在下面两种任一情况下才为true：
+			1.这两个接口值都为nil接口值。
+			2.这两个接口值的动态类型相同、动态类型为可比较类型、并且动态值相等。
 */
+func TestEg9(t *testing.T) {
+	var a, b, c interface{} = "abc", 123, "a" + "b" + "c"
+	fmt.Println(a == b) // 第二步的情形。输出"false"。
+	fmt.Println(a == c) // 第三步的情形。输出"true"。
+
+	var x *int = nil
+	var y *bool = nil
+	var ix, iy interface{} = x, y
+	var i interface{} = nil
+	fmt.Println(ix == iy) // 第二步的情形。输出"false"。
+	fmt.Println(ix == i)  // 第一步的情形。输出"false"。
+	fmt.Println(iy == i)  // 第一步的情形。输出"false"。
+
+	var s []int = nil // []int为一个不可比较类型。
+	i = s
+	fmt.Println(i == nil) // 第一步的情形。输出"false"。
+	fmt.Println(i == i)   // 第三步的情形。将产生一个恐慌。
+}
+
+/*
+	指针动态值和非指针动态值
+		标准编译器/运行时对接口值的动态值为指针类型的情况做了特别的优化。
+			此优化使得接口值包裹指针动态值比包裹非指针动态值的效率更高。 对于小尺寸值，此优化的作用不大；
+			 但是对于大尺寸值，包裹它的指针比包裹此值本身的效率高得多。 对于类型断言，此结论亦成立。
+
+		所以尽量避免在接口值中包裹大尺寸值。对于大尺寸值，应该尽量包裹它的指针。
+
+		一个[]T类型的值不能直接被转换为类型[]I，即使类型T实现了接口类型I.
+*/
+//比如，我们不能直接将一个[]string值转换为类型[]interface{}。
+func TestEg10(t *testing.T) {
+	words := []string{"hi", "you", "are", "a", "good", "boy"}
+
+	// fmt.Println函数的原型为：
+	// func Println(a ...any) (n int, err error)
+	// 所以words...不能传递给此函数的调用。
+
+	// fmt.Println(words...) // 编译不通过
+	// 将[]string值转换为类型[]any。
+	iw := make([]any, 0, len(words))
+	for _, w := range words {
+		iw = append(iw, w)
+	}
+	fmt.Println(iw...) // 编译没问题
+}
+
+/*
+	一个接口类型每个指定的方法都对应着一个隐式声明的函数
+		如果接口类型I指定了一个名为m的方法原型，则编译器将隐式声明一个与之对应的函数名为I.m的函数。
+		 此函数比m的方法原型中的参数多一个。此多出来的参数为函数I.m的第一个参数，它的类型为I。
+		  对于一个类型为I的值i，方法调用i.m(...)和函数调用I.m(i, ...)是等价的。
+*/
+type I interface {
+	m(int) bool
+}
+
+type T string
+
+func (t T) m(n int) bool {
+	return len(t) > n
+}
+func TestEg11(t *testing.T) {
+	var i I = T("string")
+	fmt.Println(i.m(6))
+	fmt.Println(I.m(i, 1))
+	fmt.Println(interface{ m(int) bool }.m(i, 5))
+}

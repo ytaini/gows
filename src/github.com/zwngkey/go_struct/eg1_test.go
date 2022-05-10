@@ -1,14 +1,13 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-02 19:28:48
- * @LastEditTime: 2022-05-03 00:11:00
+ * @LastEditTime: 2022-05-09 20:26:48
  * @Description:
  */
 package gostruct
 
 import (
 	"fmt"
-	"net/http"
 	"testing"
 )
 
@@ -259,45 +258,3 @@ var aBook = struct {
 	title: "The Million Pound Note",
 	pages: 96,
 }
-
-/*
-	类型内嵌的目的和各种和类型内嵌相关的细节。
-
-	类型内嵌:
-		一个结构体类型可以拥有若干字段。 每个字段由一个字段名和一个字段类型组成。
-			事实上，有时，一个字段可以仅由一个字段类型组成。 这样的字段声明方式称为类型内嵌（type embedding）。
-
-	类型内嵌语法:
-		在下面这个例子中，有六个类型被内嵌在了一个结构体类型中。每个类型内嵌形成了一个内嵌字段（embedded field）。
-
-		因为历史原因，内嵌字段有时也称为匿名字段。但是，事实上，每个内嵌字段有一个（隐式的）名字。
-		 此字段的非限定（unqualified）类型名即为此字段的名称。
-		  比如，下例中的六个内嵌字段的名称分别为string、error、int、P、M和Header。
-
-*/
-func F4() {
-	type P = *bool
-	type M = map[int]int
-	var x struct {
-		string // 一个定义的非指针类型
-		error  // 一个定义的接口类型
-		*int   // 一个非定义指针类型
-		P      // 一个非定义指针类型的别名
-		M      // 一个非定义类型的别名
-
-		http.Header // 一个定义的映射类型
-	}
-	x.string = "Go"
-	x.error = nil
-	x.int = new(int)
-	x.P = new(bool)
-	x.M = make(M)
-	x.Header = http.Header{}
-}
-
-/*
-	哪些类型可以被内嵌？
-		一个类型名T只有在它既不表示一个定义的指针类型也不表示一个基类型为指针类型或者接口类型的指针类型的情况下才可以被用作内嵌字段。
-
-		一个指针类型*T只有在T为一个类型名并且T既不表示一个指针类型也不表示一个接口类型的时候才能被用作内嵌字段。
-*/
