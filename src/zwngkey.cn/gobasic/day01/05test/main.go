@@ -31,7 +31,7 @@ func main() {
 		2.新增学生信息
 		3.删除学生信息
 		0.退出
-	`)
+		`)
 		fmt.Print("请输入操作:")
 		var num int
 		fmt.Scanln(&num)

@@ -1,3 +1,10 @@
+/*
+ * @Author: zwngkey
+ * @Date: 2022-05-13 06:24:07
+ * @LastEditors: zwngkey 18390924907@163.com
+ * @LastEditTime: 2022-05-14 06:15:38
+ * @Description:
+ */
 package mylogger
 
 import (
@@ -28,36 +35,6 @@ const (
 
 func checkLogLevel(logLevel logLevel) bool {
 	return logLevel == Illegal
-}
-
-func NewConsoleLogger(logLevel string) (cl *ConsoleLogger) {
-	lLevel := parseLogLevel(logLevel)
-	if checkLogLevel(lLevel) {
-		log.Fatalf("please input legal log level!!!")
-	}
-	return &ConsoleLogger{
-		logLevel: lLevel,
-	}
-}
-
-func NewFlieLogger(filePath, fileName, logLevel string) (fl *FileLogger) {
-	lLevel := parseLogLevel(logLevel)
-	if checkLogLevel(lLevel) {
-		log.Fatalf("please input legal log level!!!")
-	}
-	errFilename := fileName + ".err"
-	entry := &FileLogger{
-		logLevel:    lLevel,
-		filePath:    filePath,
-		fileName:    fileName,
-		errFileName: errFilename,
-		maxSize:     maxSize,
-	}
-	err := entry.initFile()
-	if err != nil {
-		log.Fatalf("err: %v\n", err)
-	}
-	return entry
 }
 
 func parseLogLevel(ll string) logLevel {

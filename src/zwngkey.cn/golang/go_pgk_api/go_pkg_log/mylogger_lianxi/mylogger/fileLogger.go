@@ -17,6 +17,26 @@ type FileLogger struct {
 	logFile, errLogFile             *os.File
 }
 
+func NewFlieLogger(filePath, fileName, logLevel string) (fl *FileLogger) {
+	lLevel := parseLogLevel(logLevel)
+	if checkLogLevel(lLevel) {
+		log.Fatalf("please input legal log level!!!")
+	}
+	errFilename := fileName + ".err"
+	entry := &FileLogger{
+		logLevel:    lLevel,
+		filePath:    filePath,
+		fileName:    fileName,
+		errFileName: errFilename,
+		maxSize:     maxSize,
+	}
+	err := entry.initFile()
+	if err != nil {
+		log.Fatalf("err: %v\n", err)
+	}
+	return entry
+}
+
 func (fl *FileLogger) SetLogLevel(logLevel string) {
 	ll := parseLogLevel(logLevel)
 	if checkLogLevel(ll) {

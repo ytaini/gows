@@ -1,7 +1,7 @@
 /*
  * @Author: zwngkey
  * @Date: 2021-12-12 15:00:25
- * @LastEditTime: 2022-05-13 06:25:30
+ * @LastEditTime: 2022-05-14 06:23:59
  * @Description:
  */
 package main
@@ -35,7 +35,7 @@ func main() {
 	// defer logger.CloseErrLogFile()
 	// defer logger.CloseLogFile()
 
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 10; i++ {
 		logger.Debug("这是一个Debug级别的日志 ")
 		logger.Info("这是一个Info级别的日志")
 		logger.Warning("这是一个Waring级别的日志")

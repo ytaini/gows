@@ -1,12 +1,30 @@
+/*
+ * @Author: zwngkey
+ * @Date: 2022-05-13 06:24:07
+ * @LastEditors: zwngkey 18390924907@163.com
+ * @LastEditTime: 2022-05-14 06:15:09
+ * @Description:
+ */
 package mylogger
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
 type ConsoleLogger struct {
 	logLevel
+}
+
+func NewConsoleLogger(logLevel string) (cl *ConsoleLogger) {
+	lLevel := parseLogLevel(logLevel)
+	if checkLogLevel(lLevel) {
+		log.Fatalf("please input legal log level!!!")
+	}
+	return &ConsoleLogger{
+		logLevel: lLevel,
+	}
 }
 
 func (cl *ConsoleLogger) log(ll logLevel, msg string, a ...any) {

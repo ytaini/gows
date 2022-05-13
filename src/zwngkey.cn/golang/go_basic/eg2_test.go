@@ -11,9 +11,11 @@ package gobasic
 import (
 	"fmt"
 	"testing"
+
 	"zwngkey.cn/dsaa/util"
 )
 
 func TestEg1(t *testing.T) {
 	fmt.Printf("util.Max(1, 2): %v\n", util.Max(1, 2))
+
 }
