@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-13 02:44:37
  * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 04:06:50
+ * @LastEditTime: 2022-05-13 07:03:26
  * @Description:
  */
 package gopgklog
@@ -140,3 +140,24 @@ func Test13(t *testing.T) {
 	// 调用Logger的方法Println打印日志到指定文件
 	logger.Println("your message")
 }
+
+/*
+	生产应用
+		生产系统中打印日志就比上面的要复杂多了，需要考虑至少以下几个方面：
+			日志路径设置：支持配置日志文件路径，将日志打印到指定路径的文件里。
+
+			日志级别控制：支持Debug, Info, Warn, Error, Fatal等不同日志级别。
+
+			日志切割：可以按照日期和日志大小进行自动切割。
+
+			性能：在大量日志打印的时候不能对应用程序性能造成明显影响。
+
+		Go生态中，目前比较流行的是Uber开发的zap，在GitHub上的开源地址：https://github.com/uber-go/zap
+*/
+/*
+	LUTC属性：对于Logger结构体里的flag属性，如果开启了LUTC属性，那打印的日志里显示的时间就不是本地时间了，而是UTC标准时间。
+		比如中国在东八区，中国时间减去8小时就是UTC时间。
+
+	log打印的日志一定会换行。所以即使调用的是log包里的Print函数或方法，打印的日志也会换行。因此使用log包里的Print和Println没有区别了。
+
+*/

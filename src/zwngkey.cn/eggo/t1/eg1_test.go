@@ -2,12 +2,15 @@
  * @Author: zwngkey
  * @Date: 2021-12-25 17:21:09
  * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 05:45:04
+ * @LastEditTime: 2022-05-13 06:55:38
  * @Description:
  */
 package eggot1
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 //为什么B类型只继承A类型的方法,没有继承*A类型的方法?
 
@@ -32,7 +35,7 @@ type C struct {
 	c int
 }
 
-func Test1(t *testing.T) {
+func Test1(te *testing.T) {
 	var a A = 1
 	var b B = B{a, 2}
 	a.Set(3)

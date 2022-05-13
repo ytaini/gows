@@ -2,12 +2,15 @@
  * @Author: zwngkey
  * @Date: 2021-12-25 15:43:32
  * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 05:44:36
+ * @LastEditTime: 2022-05-13 06:55:26
  * @Description:
  */
 package eggot1
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 //go组合式继承.
 
@@ -59,7 +62,7 @@ type Student struct {
 	*People
 }
 
-func Test2(t *testing.T) {
+func Test2(te *testing.T) {
 	t := Teacher{}
 	t.ShowA() //底层 (&t).ShowA() --> (*Teacher).ShowA(&t) -> (*People).ShowA(&t.People)
 	//(&(&t).People).ShowA()
