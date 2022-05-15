@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-13 20:36:26
  * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 21:39:36
+ * @LastEditTime: 2022-05-15 05:11:15
  * @Description:
 	通道用例大全
 
@@ -11,6 +11,7 @@
 package channelcase
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 	"time"
@@ -116,3 +117,156 @@ func Test3(t *testing.T) {
 
 	有时，回应方可能会不断地返回一系列值，这也同时属于后面将要介绍的数据流的一个用例。
 */
+
+/*
+	另一种“采用最快回应”的实现方式
+		我们也可以使用选择机制来实现“采用最快回应”用例。 每个数据源协程只需使用一个缓冲为1的通道并向其尝试发送回应数据即可。
+
+		注意，使用选择机制来实现“采用最快回应”的代码中使用的通道的容量必须至少为1，以保证最快回应总能够发送成功。
+			 否则，如果数据请求者因为种种原因未及时准备好接收，则所有回应者的尝试发送都将失败，从而所有回应的数据都将被错过。
+*/
+// 示例代码如下：
+
+func source1(c chan<- int32) {
+	ra, rb := rand.Int31(), rand.Intn(3)+1
+	// 休眠1秒/2秒/3秒
+	time.Sleep(time.Duration(rb) * time.Second)
+	select {
+	case c <- ra:
+	default:
+	}
+}
+func Test18(t *testing.T) {
+	c := make(chan int32, 1) // 此通道容量必须至少为1
+	for i := 0; i < 5; i++ {
+		go source1(c)
+	}
+	rnd := <-c // 只采用第一个成功发送的回应数据
+	fmt.Println(rnd)
+}
+
+/*
+	第三种“采用最快回应”的实现方式
+		如果一个“采用最快回应”用例中的数据源的数量很少，比如两个或三个，
+			我们可以让每个数据源使用一个单独的缓冲通道来回应数据，然后使用一个select代码块来同时接收这三个通道。
+
+		注意：如果下例中使用的通道是非缓冲的，未被选中的case分支对应的两个source函数调用中开辟的协程将处于永久阻塞状态，从而造成内存泄露。
+*/
+// 示例代码如下：
+func source2() <-chan int32 {
+	c := make(chan int32, 1) // 必须为一个缓冲通道
+	go func() {
+		ra, rb := rand.Int31(), rand.Intn(3)+1
+		time.Sleep(time.Duration(rb) * time.Second)
+		c <- ra
+	}()
+	return c
+}
+func Test19(t *testing.T) {
+
+	var rnd int32
+	// 阻塞在此直到某个数据源率先回应。
+	select {
+	case rnd = <-source2():
+	case rnd = <-source2():
+	case rnd = <-source2():
+	}
+	fmt.Println(rnd)
+}
+
+/*
+	超时机制（timeout）
+		在一些请求/回应用例中，一个请求可能因为种种原因导致需要超出预期的时长才能得到回应，有时甚至永远得不到回应。
+			对于这样的情形，我们可以使用一个超时方案给请求者返回一个错误信息。 使用选择机制可以很轻松地实现这样的一个超时方案。
+
+		func requestWithTimeout(timeout time.Duration) (int, error) {
+			c := make(chan int)
+			go doRequest(c) // 可能需要超出预期的时长回应
+
+			select {
+			case data := <-c:
+				return data, nil
+			case <-time.After(timeout):
+				return 0, errors.New("超时了！")
+			}
+		}
+*/
+
+/*
+	脉搏器（ticker）
+		我们可以使用尝试发送操作来实现一个每隔一定时间发送一个信号的脉搏器。
+
+*/
+func Tick(d time.Duration) <-chan void {
+	ch := make(chan void, 1)
+	go func() {
+		for {
+			time.Sleep(d)
+			select {
+			case ch <- void{}:
+			default:
+			}
+		}
+	}()
+	return ch
+}
+func Test20(t *testing.T) {
+	ti := time.Now()
+	for range Tick(s) {
+		fmt.Println(time.Since(ti))
+	}
+}
+
+/*
+	time标准库包中的Tick函数提供了同样的功能，但效率更高。 我们应该使用标准库包中的实现。
+*/
+func Test21(t *testing.T) {
+	ti := time.Now()
+	for range time.Tick(s) {
+		fmt.Println(time.Since(ti))
+	}
+}
+
+/*
+	速率限制（rate limiting）
+		同样地，我们也可以使用尝试机制来实现速率限制，但需要前面刚提到的定时器实现的配合。
+			速率限制常用来限制吞吐和确保在一段时间内的资源使用不会超标。
+*/
+//  在此例中，任何一分钟时段内处理的请求数不会超过200。
+type Request interface{}
+
+func handle(r Request) {
+	// fmt.Println(r.(int))
+}
+
+const RateLimitPeriod = time.Minute
+const RateLimit = 200 // 任何一分钟内最多处理200个请求
+
+func handleRequests(requests <-chan Request) {
+	// quotas := make(chan time.Time, RateLimit)
+
+	// go func() {
+	// 	tick := time.NewTicker(RateLimitPeriod / RateLimit)
+	// 	defer tick.Stop()
+	// 	for t := range tick.C {
+	// 		select {
+	// 		case quotas <- t:
+	// 		default:
+	// 		}
+	// 	}
+	// }()
+
+	for r := range requests {
+		// <-quotas
+		go handle(r)
+	}
+}
+
+func Test22(t *testing.T) {
+	requests := make(chan Request)
+	go handleRequests(requests)
+	// time.Sleep(time.Minute)
+	for i := 0; ; i++ {
+		requests <- i
+	}
+}
