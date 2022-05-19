@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-05 20:50:28
  * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-06 01:19:21
+ * @LastEditTime: 2022-05-18 18:04:08
  * @Description: go泛型
  */
 package gogeneric
@@ -395,6 +395,7 @@ func TestEg5(t *testing.T) {
 		~int | MyInt
 	}
 
+
 	但是相交的类型中是接口的话，则不受这一限制：
 	type _ interface {
 		~int | interface{ MyInt }  // 正确
@@ -411,6 +412,7 @@ func TestEg5(t *testing.T) {
 */
 /*
 	类型的并集中不能有类型形参
+		联合(union)类型元素不能有类型参数(type parameter)
 
 	type MyInf[T ~int | ~string] interface {
 		~float32 | T  // 错误。T是类型形参

@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-17 17:37:23
  * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-17 21:57:32
+ * @LastEditTime: 2022-05-18 15:13:46
  * @Description:
 	go 文件操作
 		https://colobu.com/2016/10/12/go-file-operations/#%E4%BB%8B%E7%BB%8D
@@ -280,4 +280,35 @@ func Test8(t *testing.T) {
 		log.Fatal(err)
 	}
 	fmt.Println(n)
+}
+
+func Test9(t *testing.T) {
+	file, err := os.Open("./file/test.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	// 缺省的分隔函数是bufio.ScanLines,我们这里使用ScanWords。
+	scanner.Split(bufio.ScanWords)
+	// scanner.Split(bufio.ScanRunes)
+	// scanner.Split(bufio.ScanBytes)
+
+	// 也可以定制一个SplitFunc类型的分隔函数
+	// mySplitFunc := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	// 	return 0, nil, nil
+	// }
+	// scanner.Split(mySplitFunc)
+
+	for scanner.Scan() {
+		// 得到数据，Bytes() 或者 Text()
+		fmt.Printf("First word found:%q\n", scanner.Text())
+	}
+	// 出现错误或者EOF是返回Error
+	if scanner.Err() != nil {
+		log.Fatal(err)
+	}
+
 }

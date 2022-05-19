@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-13 00:54:20
  * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 01:41:37
+ * @LastEditTime: 2022-05-18 20:36:17
  * @Description: go 模糊测试
  */
 package gofuzzing
@@ -101,8 +101,6 @@ func FuzzReverse(f *testing.F) {
 			默认不运行以BenchmarkXxx开头的性能测试函数，如果我们想运行 benchmark用例，则需要加上 -bench 参数。
 
 	2.如果要基于种子语料库生成随机测试数据用于模糊测试，需要给go test命令增加 -fuzz参数。
-		go test -fuzz=Fuzz
-
-
+		go test -fuzz={FuzzTestName}
 
 */

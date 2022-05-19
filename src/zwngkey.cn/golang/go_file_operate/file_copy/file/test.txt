@@ -1,0 +1,3 @@
+ABCBuffered string
+
+you are a good boy!
