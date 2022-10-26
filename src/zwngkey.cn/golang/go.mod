@@ -7,6 +7,8 @@ require (
 	zwngkey.cn/dsaa v1.0.0
 )
 
+require github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394 // indirect
+
 require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
