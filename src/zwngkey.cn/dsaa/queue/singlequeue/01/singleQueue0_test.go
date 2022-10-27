@@ -1,8 +1,8 @@
 /*
  * @Author: imzw
  * @Date: 2022-10-26 09:05:33
- * @LastEditors: error: git config user.name && git config user.email & please set dead value or install git
- * @LastEditTime: 2022-10-26 09:45:58
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-10-27 23:06:09
  * @Description: 	基于数组实现一次性队列.
  */
 package singlequeue
@@ -50,7 +50,6 @@ func Test2(t *testing.T) {
 			fmt.Println(err)
 		}
 	}
-	q.ShowQueue()
 }
 
 //获取

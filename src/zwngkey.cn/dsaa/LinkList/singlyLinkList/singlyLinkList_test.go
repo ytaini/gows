@@ -2,7 +2,7 @@
  * @Author: imzw
  * @Date: 2022-10-26 09:59:45
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-26 13:55:19
+ * @LastEditTime: 2022-10-27 09:27:30
  * @Description:
 	go 实现单链表
 	Node: 包含一个数据域，一个指针域（指向下一个节点）
@@ -56,13 +56,11 @@ func (l *LList) Append(data any) {
 	if l.length == 0 {
 		l.header = newNode
 	}
-	if l.length > 0 {
-		cur := l.header
-		for cur.next != nil {
-			cur = cur.next
-		}
-		cur.next = newNode
+	cur := l.header
+	for cur.next != nil {
+		cur = cur.next
 	}
+	cur.next = newNode
 	l.length++
 }
 
