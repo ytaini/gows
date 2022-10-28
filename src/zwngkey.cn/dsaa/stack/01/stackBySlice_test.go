@@ -2,9 +2,9 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-27 23:47:15
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-28 00:07:25
+ * @LastEditTime: 2022-10-28 21:59:57
  * @Description:
-	基于slice 实现栈
+	基于slice 实现栈1
 */
 package sbs
 
