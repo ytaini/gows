@@ -1,11 +1,11 @@
 /*
  * @Author: wzmiiiiii
- * @Date: 2022-10-30 00:13:39
+ * @Date: 2022-10-28 22:16:49
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-30 00:13:39
+ * @LastEditTime: 2022-10-28 22:25:56
  * @Description:
- */
 
+ */
 package stack
 
 import (
@@ -14,7 +14,7 @@ import (
 )
 
 func Test(t *testing.T) {
-	stack := New[int]()
+	stack := New()
 	fmt.Println(stack.Pop())
 	fmt.Printf("stack.IsEmpty(): %v\n", stack.IsEmpty())
 	stack.Push(12)

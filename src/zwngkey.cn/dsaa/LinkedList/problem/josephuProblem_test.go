@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-28 22:40:24
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-29 01:07:11
+ * @LastEditTime: 2022-10-29 10:58:59
  * @Description:
 	Josephu 问题
 		设编号为 1，2，… n 的 n 个人围坐一圈，约定编号为 k（1<=k<=n）的人从 1开始报数，数到 m 的那个人出列，
@@ -22,10 +22,13 @@ import (
 )
 
 type (
+	// 定义结点
 	person struct {
 		no   int
 		next *person
 	}
+	//用一个不带头结点的循环链表来处理
+	//定义单向循环链表
 	PersonList struct {
 		head *person
 	}
@@ -35,6 +38,7 @@ func New() *PersonList {
 	return &PersonList{}
 }
 
+// 生成num个结点的不带头的单向循环链表
 func (p *PersonList) addPerson(num int) {
 	if num < 1 {
 		return
@@ -65,6 +69,17 @@ func (p *PersonList) Print() {
 	fmt.Printf("编号:%v\n", cur.no)
 }
 
+/*
+	1.创建n个结点,不带头结点的链表
+	2.创建一个辅助指针(变量)helper,初始指向最后一个结点
+	3.找到第k个人,让helper指向第k-1个人
+	4.判断当前链表是否只有一个结点.如果是flag置为false.
+	5.再找到第m个人,让helper指向第m-1个人.
+		判断头指针是否指向第m个人
+			如果是,头指针指向下一个节点.删除第m个人
+			如果不是,删除第m个人.
+	6.重复第4-5步.
+*/
 func Josephu(n, k, m int) {
 
 	if n <= 1 || k > n || k < 0 || m < 0 {
@@ -74,9 +89,11 @@ func Josephu(n, k, m int) {
 	l := New()
 	l.addPerson(n)
 
+	head := l.head
+
 	// 初始位置--链尾
-	helper := l.head
-	for helper.next != l.head {
+	helper := head
+	for helper.next != head {
 		helper = helper.next
 	}
 
@@ -86,55 +103,73 @@ func Josephu(n, k, m int) {
 	}
 	flag := true
 	for flag {
-		if l.head == l.head.next {
+		if l.head == head.next {
 			flag = false
 		}
 		//找到第m-1个人
 		for i := 0; i < m-1; i++ {
 			helper = helper.next
 		}
-		fmt.Println(helper.next.no)
-		if helper.next == l.head {
-			l.head = l.head.next
+		fmt.Println(helper.next.no) //打印第m个人的编号
+		if helper.next == head {
+			head = head.next
 		}
-		helper.next = helper.next.next
+		helper.next = helper.next.next //删除第m个人
 	}
 }
 
+/*
+*表示核心操作.
+
+	定义头指针head:指向第1人
+	*定义辅助指针(变量)helper:指向最后一个人.
+	1.找到第k个人,head指向它,helper指向第k-1个人
+	*2.判断头指针是否等于heleper (helper.next 始终等于head,除了只剩一个结点时)
+	3.找到第m个人,head指向它,helper指向第m-1个人
+	*4.删除第m个人,并打印其编号.
+		删除操作: 先让head指向第m+1个人,然后helper.next=head
+	5.重复2-4步.
+*/
 func Josephu1(n, k, m int) {
 
 	if n <= 1 || k > n || k < 0 || m < 0 {
 		fmt.Println("参数非法")
 		return
 	}
+	// 创建不带头结点的单向循环链表
 	l := New()
+
+	// 添加n个结点
 	l.addPerson(n)
 
-	// 初始位置--链尾
-	helper := l.head
-	for helper.next != l.head {
+	// 头指针
+	head := l.head
+
+	// 辅助指针--使其指向最后一个结点.
+	helper := head
+	for helper.next != head {
 		helper = helper.next
 	}
 
-	// 找到第k-1个人
 	for i := 0; i < k-1; i++ {
-		helper = helper.next
-		l.head = l.head.next
+		helper = helper.next //helper指向第k-1个人
+		head = head.next     //head指向第k个人
 	}
 
 	flag := true
 	for flag {
-		if l.head == helper {
+		// 判断是否只有一个结点了
+		if head == helper {
 			flag = false
 		}
-		//找到第m-1个人
+
 		for i := 0; i < m-1; i++ {
-			helper = helper.next
-			l.head = l.head.next
+			helper = helper.next //helper指向第m-1个人
+			head = head.next     //head指向第m个人
 		}
-		fmt.Println(helper.next.no)
-		l.head = l.head.next
-		helper.next = l.head
+		fmt.Println(helper.next.no) //打印第m个人的编号
+		head = head.next            //head 指向第m+1个人
+		helper.next = head          //删除第m个人
 	}
 }
 

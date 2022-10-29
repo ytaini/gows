@@ -1,3 +1,9 @@
+[TOC]
+
+
+
+# dp 动态规划
+
 ## dp题特点
 1. 计数
   - 有多少中方法走到右下角
@@ -46,7 +52,7 @@
 
     - 除掉这枚硬币后,前面硬币的面值加起来是**27-a<sub>k</sub>**
 
-      <img src="/Users/zhangwei/Library/Application Support/typora-user-images/image-20220422064757371.png" alt="image-20220422064757371"  />
+      
 
     - 关键点1:
 
@@ -80,7 +86,7 @@
 
 
 
-## dp与递归的区别?
+### dp与递归的区别?
 
 递归解法的问题:
 

@@ -1,10 +1,10 @@
 /*
  * @Author: wzmiiiiii
- * @Date: 2022-10-28 22:00:52
+ * @Date: 2022-10-30 00:10:03
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-28 22:29:31
+ * @LastEditTime: 2022-10-30 00:21:33
  * @Description:
-	基于链表实现stack
+	链表实现栈 + 泛型
 */
 package stack
 
@@ -13,38 +13,38 @@ import (
 )
 
 type (
-	Stack struct {
-		top    *node
+	Stack[T any] struct {
+		top    *node[T]
 		length int
 	}
-	node struct {
-		data any
-		prev *node
+	node[T any] struct {
+		data T
+		prev *node[T]
 	}
 )
 
-func New() *Stack {
-	return &Stack{nil, 0}
+func New[T any]() *Stack[T] {
+	return &Stack[T]{nil, 0}
 }
 
-func (s *Stack) Len() int {
+func (s *Stack[T]) Len() int {
 	return s.length
 }
 
-func (s *Stack) IsEmpty() bool {
+func (s *Stack[T]) IsEmpty() bool {
 	return s.length == 0
 }
 
-func (s *Stack) Peek() (any, error) {
+func (s *Stack[T]) Peek() (t T, error error) {
 	if s.length == 0 {
-		return nil, fmt.Errorf("空栈")
+		return t, fmt.Errorf("空栈")
 	}
 	return s.top.data, nil
 }
 
-func (s *Stack) Pop() (any, error) {
+func (s *Stack[T]) Pop() (t T, err error) {
 	if s.length == 0 {
-		return nil, fmt.Errorf("空栈")
+		return t, fmt.Errorf("空栈")
 	}
 	v := s.top
 	s.top = v.prev
@@ -52,13 +52,13 @@ func (s *Stack) Pop() (any, error) {
 	return v.data, nil
 }
 
-func (s *Stack) Push(data any) {
-	newNode := &node{data: data, prev: s.top}
+func (s *Stack[T]) Push(data T) {
+	newNode := &node[T]{data: data, prev: s.top}
 	s.top = newNode
 	s.length++
 }
 
-func (s *Stack) Print() {
+func (s *Stack[T]) Print() {
 	if s.length == 0 {
 		fmt.Println("空栈")
 		return

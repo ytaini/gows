@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-27 23:47:15
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-28 21:59:57
+ * @LastEditTime: 2022-10-29 15:02:18
  * @Description:
 	基于slice 实现栈1
 */
@@ -10,13 +10,12 @@ package sbs
 
 import (
 	"fmt"
-	"sync"
 	"testing"
 )
 
+//基于切片
 type Stack struct {
 	datas []any
-	lock  sync.RWMutex
 }
 
 func NewStack() *Stack {
@@ -24,19 +23,17 @@ func NewStack() *Stack {
 }
 
 func (s *Stack) Print() {
-	fmt.Println(s.datas...)
+	for i := len(s.datas) - 1; i >= 0; i-- {
+		fmt.Printf("↓->%d\n", s.datas[i])
+	}
 }
 
 func (s *Stack) Push(data any) {
-	s.lock.Lock()
-	defer s.lock.Unlock()
 	s.datas = append(s.datas, data)
 }
 
 func (s *Stack) Pop() any {
-	s.lock.Lock()
-	defer s.lock.Unlock()
-	if len(s.datas) == 0 {
+	if s.IsEmpty() {
 		return nil
 	}
 	data := s.datas[len(s.datas)-1]
@@ -44,7 +41,18 @@ func (s *Stack) Pop() any {
 	return data
 }
 
+func (s *Stack) IsEmpty() bool {
+	return len(s.datas) == 0
+}
+
 func Test1(t *testing.T) {
 	s := NewStack()
-	fmt.Println(s.datas)
+	for i := 0; i < 100; i++ {
+		s.Push(i)
+	}
+	s.Print()
+
+	for i := 0; i < 101; i++ {
+		s.Pop()
+	}
 }

@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-27 08:04:44
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-28 22:34:25
+ * @LastEditTime: 2022-10-29 14:18:30
  * @Description:
 	go实现单链表
 */
@@ -11,6 +11,7 @@ package sll
 import (
 	"errors"
 	"fmt"
+	"math"
 
 	"zwngkey.cn/dsaa/stack"
 )
@@ -20,7 +21,7 @@ type PNode = *LNode
 
 // 结点结构体
 type LNode struct {
-	data any
+	data int
 	next PNode
 }
 
@@ -32,7 +33,7 @@ func NewLLinkList() LLinkList {
 	return new(LNode)
 }
 
-func NewLNode(data any) PNode {
+func NewLNode(data int) PNode {
 	return &LNode{data: data}
 }
 
@@ -81,12 +82,12 @@ func (l LLinkList) Len() int {
 }
 
 // 通过位置查找值
-func (l LLinkList) FindValueByIndex(i int) (data any, err error) {
+func (l LLinkList) FindValueByIndex(i int) (data int, err error) {
 	if l.IsEmpty() {
-		return nil, errors.New("链表为空")
+		return int(math.NaN()), errors.New("链表为空")
 	}
 	if i > l.Len() {
-		return nil, fmt.Errorf("第%v个元素不存在", i)
+		return int(math.NaN()), fmt.Errorf("第%v个元素不存在", i)
 	}
 	cur := l.Frist()
 	for j := 1; j < i; j++ {
@@ -96,7 +97,7 @@ func (l LLinkList) FindValueByIndex(i int) (data any, err error) {
 }
 
 // 通过值查询位置
-func (l LLinkList) FindIndexByValue(data any) (i int, err error) {
+func (l LLinkList) FindIndexByValue(data int) (i int, err error) {
 	if l.IsEmpty() {
 		return -1, errors.New("链表为空")
 	}
@@ -122,7 +123,7 @@ func (l LLinkList) InsertBeforeNode(newNode PNode) PNode {
 }
 
 // 头插值
-func (l LLinkList) InsertBeforeValue(data any) PNode {
+func (l LLinkList) InsertBeforeValue(data int) PNode {
 	return l.InsertBeforeNode(NewLNode(data))
 }
 
@@ -140,7 +141,7 @@ func (l LLinkList) InsertBackNode(newNode PNode) PNode {
 }
 
 // 尾插值
-func (l LLinkList) InsertBackValue(data any) PNode {
+func (l LLinkList) InsertBackValue(data int) PNode {
 	return l.InsertBackNode(NewLNode(data))
 }
 
@@ -166,7 +167,7 @@ func (l LLinkList) InsertNodeByIndex(i int, newNode PNode) PNode {
 }
 
 // 在第i个后插入值data
-func (l LLinkList) InsertValueByIndex(i int, data any) PNode {
+func (l LLinkList) InsertValueByIndex(i int, data int) PNode {
 	return l.InsertNodeByIndex(i, NewLNode(data))
 }
 
@@ -305,4 +306,152 @@ func (l LLinkList) Show() {
 		current = current.next
 		i++
 	}
+}
+
+/*
+	合并两个有序的单链表，合并之后的链表依然是有序的
+		1.以其中一个链表为主，依次向这个链表中插入另一个链表的元素
+		2.直接将两个有序链表合并成一个新的有序链表
+*/
+// 1.以其中一个链表为主，依次向这个链表中插入另一个链表的元素
+// 合并两个升序的单链表(有重复)
+func (l LLinkList) MergeAscList(other LLinkList) {
+	if other.IsEmpty() {
+		return
+	}
+	if l.IsEmpty() {
+		l.next = other.Frist()
+		return
+	}
+	lCur := l             //指向头结点
+	OCur := other.Frist() //指向首元结点
+	for lCur.next != nil && OCur != nil {
+		if lCur.next.data <= OCur.data {
+			lCur = lCur.next
+			continue
+		}
+		OCur.next, lCur.next, OCur = lCur.next, OCur, OCur.next
+		lCur = lCur.next
+	}
+	if OCur != nil {
+		lCur.next = OCur
+	}
+}
+
+// 合并两个升序的单链表(无重复)
+func (l LLinkList) MergeAscList2(other LLinkList) {
+	if other.IsEmpty() {
+		return
+	}
+	if l.IsEmpty() {
+		l.next = other.Frist()
+		return
+	}
+	lCur := l
+	OCur := other.Frist()
+	for lCur.next != nil && OCur != nil {
+		if lCur.next.data < OCur.data {
+			lCur = lCur.next
+			continue
+		}
+		if lCur.next.data == OCur.data {
+			OCur = OCur.next
+			continue
+		}
+		OCur.next, lCur.next, OCur = lCur.next, OCur, OCur.next
+		lCur = lCur.next
+	}
+	if OCur != nil {
+		lCur.next = OCur
+	}
+}
+
+// 合并两个降序的单链表(有重复)
+func (l LLinkList) MergeDescList(other LLinkList) {
+	if other.IsEmpty() {
+		return
+	}
+	if l.IsEmpty() {
+		l.next = other.Frist()
+		return
+	}
+	lCur := l
+	OCur := other.Frist()
+	for lCur.next != nil && OCur != nil {
+		if lCur.next.data > OCur.data {
+			lCur = lCur.next
+			continue
+		}
+		OCur.next, lCur.next, OCur = lCur.next, OCur, OCur.next
+		lCur = lCur.next
+	}
+	if OCur != nil {
+		lCur.next = OCur
+	}
+}
+
+// 合并两个降序的单链表(无重复)
+func (l LLinkList) MergeDescList2(other LLinkList) {
+	if other.IsEmpty() {
+		return
+	}
+	if l.IsEmpty() {
+		l.next = other.Frist()
+		return
+	}
+	lCur := l
+	OCur := other.Frist()
+	for lCur.next != nil && OCur != nil {
+		if lCur.next.data > OCur.data {
+			lCur = lCur.next
+			continue
+		}
+		if lCur.next.data == OCur.data {
+			OCur = OCur.next
+			continue
+		}
+		OCur.next, lCur.next, OCur = lCur.next, OCur, OCur.next
+		lCur = lCur.next
+	}
+	if OCur != nil {
+		lCur.next = OCur
+	}
+}
+
+// 2.直接将两个有序链表合并成一个新的有序链表
+// 合并两个升序的单链表(无重复)
+func MergeList(one, other LLinkList) LLinkList {
+	if one.IsEmpty() {
+		return other
+	}
+	if other.IsEmpty() {
+		return one
+	}
+	l := NewLLinkList()
+
+	cur := one.Frist()
+	oCur := other.Frist()
+	lCur := l
+
+	for cur != nil && oCur != nil {
+		if cur.data < oCur.data {
+			lCur.next = cur
+			cur = cur.next
+		} else if cur.data > oCur.data {
+			lCur.next = oCur
+			oCur = oCur.next
+		} else {
+			lCur.next = cur
+			cur = cur.next
+			oCur = oCur.next
+		}
+		lCur = lCur.next
+	}
+	if oCur != nil {
+		lCur.next = oCur
+	}
+	if cur != nil {
+		lCur.next = cur
+	}
+	return l
 }
