@@ -2,17 +2,19 @@
  * @Author: zwngkey
  * @Date: 2022-07-25 13:43:55
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-29 18:36:41
+ * @LastEditTime: 2022-10-30 14:01:33
  * @Description:
  */
-package main
+package goregexp
 
 import (
 	"fmt"
 	"regexp"
+	"testing"
 )
 
-func main() {
+func Test1(t *testing.T) {
+
 	buf := "abc azc a7c aac 888 a9c  tac"
 	reg := regexp.MustCompile(`a.c`)
 	if reg == nil {

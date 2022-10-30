@@ -2,8 +2,12 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-30 00:45:35
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-30 03:58:39
+ * @LastEditTime: 2022-10-30 18:27:25
  * @Description:
+
+ 	注意: 无法处理操作数有负数.
+		如: (3+4)*5+6*(-1)
+
 	中缀表达式转逆波兰式
 
 	中缀表达式转逆波兰式算法:
@@ -26,99 +30,90 @@
 package problem
 
 import (
-	"fmt"
+	"math"
 	"regexp"
-	"testing"
 
 	queue "zwngkey.cn/dsaa/queue/circleQueue"
-	"zwngkey.cn/dsaa/stack"
+	stack "zwngkey.cn/dsaa/stack"
 )
 
-func Test4(t *testing.T) {
-	// exp := "100+((22+31)*44)-53"
-	// exp := "(3+4)*5-6"
-	// exp := "(12+5)*(8-1)-6*6"
-	// exp := "2+3*5"
-	// exp := "2+3"
-	exp := "10-10"
-	fmt.Println("中缀表达式字符串为: ", exp)
-	// [100,+,(,(,22,+,31,),*,44,),-,53]
+const LEFT string = "("
+const RIGHT string = ")"
+const ADD string = "+"
+const MINUS string = "-"
+const TIMES string = "*"
+const DIVISION string = "/"
 
-	res := split(exp)
-	fmt.Println("读取得到的中缀表达式为: ", res)
+const DEFAULT_LEVEL int = -1
+const LEVEL1 int = 1
+const LEVEL2 int = 2
+const MAX_LEVEL int = math.MaxInt
 
-	// [100,22,31,+,44,*,+,53,-]
-	res = infixToSuffix(res)
-	fmt.Println("转换得到的后缀表达式为: ", res)
+var s = stack.New[string]()
 
-	res1, _ := calcRpn(res)
-	fmt.Printf("最终计算结果为：%s=%v\n", exp, res1)
-}
+// s1 := stack.New[string]()
+var q = queue.NewQueue()
 
 // 将中缀表达式转后缀表达式
-func infixToSuffix(exp []string) (s []string) {
-	s1 := stack.New[string]()
-	// s2 := stack.New[string]()
-	s2 := queue.NewQueue()
+func InfixToSuffix(infixExp []string) (suffixExp []string) {
 
-	for _, v1 := range exp {
+	for _, item := range infixExp {
 		// 如果v1能转为int,说明v1为操作数,否则为操作符
 		// _, err := strconv.Atoi(v1)
-
 		reg, _ := regexp.Compile(`\d+`)
 
-		if reg.MatchString(v1) {
+		if reg.MatchString(item) {
 			// 如果v1为操作数
-			s2.Push(v1)
+			q.Push(item)
 		} else {
 			// 如果v1为操作符
 
 			// 如果v1为括号
-			if isParentheses(v1) {
-				parenthesesHandle(v1, s1, s2)
+			if isParentheses(item) {
+				parenthesesHandle(item)
 			} else {
 				//如果为运算符
-				operHandle(v1, s1, s2)
+				operHandle(item)
 			}
 		}
 	}
-	for !s1.IsEmpty() {
-		v1, _ := s1.Pop()
-		s2.Push(v1)
+	for !s.IsEmpty() {
+		v1, _ := s.Pop()
+		q.Push(v1)
 	}
-	for !s2.IsEmpty() {
-		v1, _ := s2.Pop()
-		s = append(s, v1.(string))
+	for !q.IsEmpty() {
+		v1, _ := q.Pop()
+		suffixExp = append(suffixExp, v1.(string))
 	}
 	// s = Reverse(s)
 	return
 }
 
 // 操作符为括号时,处理逻辑
-func parenthesesHandle(v1 string, s1 *stack.Stack[string], s2 *queue.Queue) {
-	if v1 == ")" {
-		cur, _ := s1.Pop()
-		for cur != "(" {
-			s2.Push(cur)
-			cur, _ = s1.Pop()
+func parenthesesHandle(v1 string) {
+	if v1 == RIGHT {
+		cur, _ := s.Pop()
+		for cur != LEFT {
+			q.Push(cur)
+			cur, _ = s.Pop()
 		}
 	}
-	if v1 == "(" {
-		s1.Push(v1)
+	if v1 == LEFT {
+		s.Push(v1)
 	}
 }
 
 // 操作符为运算符时,处理逻辑
-func operHandle(v1 string, s1 *stack.Stack[string], s2 *queue.Queue) {
-	v3, _ := s1.Peek()
-	if s1.IsEmpty() || v3 == "(" {
-		s1.Push(v1)
-	} else if prio(v1) > prio(v3) {
-		s1.Push(v1)
+func operHandle(v1 string) {
+	v3, _ := s.Peek()
+	if s.IsEmpty() || v3 == LEFT {
+		s.Push(v1)
+	} else if operPriority(v1) > operPriority(v3) {
+		s.Push(v1)
 	} else {
-		v4, _ := s1.Pop()
-		s2.Push(v4)
-		operHandle(v1, s1, s2)
+		v4, _ := s.Pop()
+		q.Push(v4)
+		operHandle(v1)
 	}
 }
 
@@ -150,56 +145,57 @@ func operHandle(v1 string, s1 *stack.Stack[string], s2 *queue.Queue) {
 // 	}
 // }
 
+// 判断是否为操作符
+func IsOp(op string) bool {
+	return regexp.MustCompile(`\+|\-|\*|\/|\(|\)`).MatchString(op)
+}
+
+func operPriority(str string) int {
+	switch str {
+	case ADD, MINUS:
+		return LEVEL1
+	case TIMES, DIVISION:
+		return LEVEL2
+	case RIGHT, LEFT:
+		return MAX_LEVEL
+	default:
+		return DEFAULT_LEVEL
+	}
+}
+
 // 判断操作符是否为括号
 func isParentheses(op string) bool {
-	return op == "(" || op == ")"
-}
-
-// 将exp各个操作数,操作符分别加入s中
-func split(exp string) (s []string) {
-	index := 0
-	for index != len(exp) {
-		ch := rune(exp[index])
-		if ch >= '0' && ch <= '9' {
-			j := index + 1
-			for j != len(exp) && !IsOp(rune(exp[j])) {
-				j++
-			}
-			v1 := exp[index:j]
-			index = j
-			s = append(s, v1)
-			continue
-		} else if IsOp(ch) {
-			s = append(s, exp[index:index+1])
-		} else {
-			panic("错误表达式")
-		}
-		index++
-	}
-	return
-}
-
-func IsOp(op rune) bool {
-	return op == '+' || op == '-' || op == '*' || op == '/' || op == '(' || op == ')'
-}
-
-// 定义操作符优先级
-func prio(op string) int {
-	switch op {
-	case "*", "/":
-		return 1
-	case "+", "-":
-		return 0
-	case "(", ")":
-		return 2
-	}
-	return -1
+	return op == RIGHT || op == LEFT
 }
 
 // 反转切片
 func Reverse(s []string) []string {
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
 		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
+// 将exp各个操作数,操作符分别加入s中
+func Split(exp string) (s []string) {
+	index := 0
+	for index != len(exp) {
+		ch := rune(exp[index])
+		if ch >= '0' && ch <= '9' {
+			j := index + 1
+			for j != len(exp) && !IsOp(string(exp[j])) {
+				j++
+			}
+			v1 := exp[index:j]
+			index = j
+			s = append(s, v1)
+			continue
+		} else if IsOp(string(ch)) {
+			s = append(s, exp[index:index+1])
+		} else {
+			panic("错误表达式")
+		}
+		index++
 	}
 	return s
 }

@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-29 23:22:22
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-30 00:43:54
+ * @LastEditTime: 2022-10-30 18:28:35
  * @Description:
 	完成一个逆波兰计算器，要求完成如下任务:
 		输入一个逆波兰表达式(后缀表达式)，使用栈(Stack), 计算其结果
@@ -16,8 +16,6 @@ import (
 	"strconv"
 	"strings"
 	"testing"
-
-	"zwngkey.cn/dsaa/stack"
 )
 
 func Test(t *testing.T) {
@@ -25,12 +23,12 @@ func Test(t *testing.T) {
 	// (3+4)*5-6 => 34+5*6-
 	sufExp := "30 40 + 5 * 6 -"
 	exp := strings.Split(sufExp, " ")
-	res, _ := calcRpn(exp)
+	res, _ := CalcRpn(exp)
 	fmt.Println("(3+4)*5-6 :", res)
 }
 
-func calcRpn(exp []string) (int, error) {
-	s := stack.New[string]()
+func CalcRpn(exp []string) (int, error) {
+	// s := stack.New[string]()
 	for _, v := range exp {
 		regex, _ := regexp.Compile(`\d+`)
 		//过滤数值

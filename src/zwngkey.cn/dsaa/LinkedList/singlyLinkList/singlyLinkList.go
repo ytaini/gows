@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-27 08:04:44
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-29 14:18:30
+ * @LastEditTime: 2022-10-30 16:12:20
  * @Description:
 	go实现单链表
 */
@@ -286,7 +286,7 @@ func (l LLinkList) ReversePrint2() {
 	if l.IsEmpty() {
 		return
 	}
-	s := stack.New()
+	s := stack.New[int]()
 	for cur := l.next; cur != nil; cur = cur.next {
 		s.Push(cur.data)
 	}
