@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-28 18:23:43
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-28 20:02:06
+ * @LastEditTime: 2022-11-01 12:05:16
  * @Description:
 	go实现双向链表
 */
@@ -34,6 +34,10 @@ func NewList() *DList {
 
 func (d *DList) First() any {
 	return d.header.data
+}
+
+func (d *DList) FirstNode() *Node {
+	return d.header.nextNode
 }
 
 func (d *DList) Len() int {
@@ -173,4 +177,8 @@ func (l DList) PrintList() {
 		i++
 	}
 	fmt.Printf("第%v的节点是%v\n", i, current.data)
+}
+
+func (n *Node) Next() *Node {
+	return n.nextNode
 }

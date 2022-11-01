@@ -1,14 +1,17 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-04-21 23:00:40
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 06:07:24
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-01 00:53:04
  * @Description:
- */
+	给出不同面额的硬币以及一个总金额. 写一个方法来计算给出的总金额可以换取的最少的硬币数量. 如果已有硬币的任意组合均无法与总金额面额相等, 那么返回 -1.
+		如:[2,5,7]  27
+*/
 package dp
 
 import (
 	"math"
+
 	"zwngkey.cn/dsaa/util"
 )
 
