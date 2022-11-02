@@ -1,8 +1,8 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-04-17 19:40:44
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-04 18:54:24
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-02 15:06:17
  * @Description:
  	strconv包与fmt包
 	 各类型与字符串之间的显示转换.
@@ -11,10 +11,11 @@ package gostring
 
 import (
 	"fmt"
+	"testing"
 	//"strconv"
 )
 
-func Test() {
+func Test(t *testing.T) {
 
 	//Sprintf格式化字符串,把指定的数据类型转成我要的字符串
 	//Spirntf()会返转换后的字符串

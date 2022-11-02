@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-01 23:26:26
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-02 02:33:21
+ * @LastEditTime: 2022-11-02 14:07:38
  * @Description:
 	n 皇后问题 研究的是如何将 n 个皇后放置在 n × n 的棋盘上，并且使皇后彼此之间不能相互攻击。即：任意两个皇后都不能处于同一行、同一列或同一斜线上，
 
@@ -16,6 +16,8 @@ import "fmt"
 /*
 	根据题目描述:
 		将 N 个皇后放置在N×N的棋盘上，一定是每一行有且仅有一个皇后，每一列有且仅有一个皇后，且任何两个皇后都不能在同一条斜线上。
+
+	方法一: 基于集合的
 
 	回溯的具体做法是：
 		依次在每一行放置一个皇后，每次新放置的皇后都不能和已经放置的皇后之间有攻击，
@@ -34,9 +36,9 @@ import "fmt"
 */
 
 func totalNQueens(n int) (ans int) {
-	columns := make([]bool, n)        // 记录某个列上是否有皇后
-	diagonals1 := make([]bool, 2*n-1) // 记录某条左上到右下的斜线上是否有皇后
-	diagonals2 := make([]bool, 2*n-1) // 记录某条右下到左上的斜线上是否有皇后
+	columns := make([]bool, n)        // 通过下标记录某个列上是否有皇后
+	diagonals1 := make([]bool, 2*n-1) // 通过下标记录某条左上到右下的斜线上是否有皇后
+	diagonals2 := make([]bool, 2*n-1) // 通过下标记录某条右下到左上的斜线上是否有皇后
 
 	var backtrack func(int)
 
