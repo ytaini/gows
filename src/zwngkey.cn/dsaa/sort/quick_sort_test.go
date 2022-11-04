@@ -2,9 +2,12 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-04 00:46:05
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-04 03:13:56
+ * @LastEditTime: 2022-11-04 17:22:59
  * @Description:
-	快速排序（Quicksort）是对冒泡排序的一种改进，借用了分治的思想
+	快速排序（Quicksort）是对冒泡排序的一种改进，借用了分治思想，选基准，依次将剩余元素的小于基准放其左侧，大的放右侧
+		然后取基准的前半部分和后半部分进行同样处理，直至各子序列剩余一个元素结束，排序完成
+
+	快速排序，基于比较，不稳定算法，时间平均O(nlogn)，最坏O(n^2)，空间O(logn)
 
 	思想:
 		通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，
@@ -13,6 +16,11 @@
 	1.在待排序的元素任取一个元素作为基准（通常选第一个元素，但最好的方法是从待排序元素中随机选取一个为基准），称为基准元素（pivot）
 	2.将待排序的元素进行分区，比基准元素大的元素放在它的右边，比基准元素小的放在它的左边
 	3.对左右两个分区重复以上步骤，直到所有的元素都是有序的
+
+	注意：
+		小规模数据(n<100)，由于快排用到递归，性能不如插排
+		进行排序时，可定义阈值，小规模数据用插排，往后用快排
+		golang的sort包用到了快排
 
 */
 package sort
@@ -24,15 +32,8 @@ import (
 	"time"
 )
 
-// 快速排序，基于比较，不稳定算法，时间平均O(nlogn)，最坏O(n^2)，空间O(logn)
-// 分治思想，选基准，依次将剩余元素的小于基准放其左侧，大的放右侧
-// 然后取基准的前半部分和后半部分进行同样处理，直至各子序列剩余一个元素结束，排序完成
-// 注意：
-// 小规模数据(n<100)，由于快排用到递归，性能不如插排
-// 进行排序时，可定义阈值，小规模数据用插排，往后用快排
-// golang的sort包用到了快排
 // 升序
-func quickSort(seq []int) {
+func QuickSort1(seq []int) { // 第三快
 	var quick func(seq []int, left, right int)
 
 	quick = func(seq []int, left, right int) {
@@ -59,53 +60,164 @@ func quickSort(seq []int) {
 	quick(seq, 0, len(seq)-1)
 }
 
-func quickSort1(seq []int) {
-	var partition = func(seq []int, left, right int) int {
-		l, r, pivot, index := left, right, seq[left], left
-		for r >= l {
-			for r >= l {
-				if seq[r] < pivot {
-					seq[l] = seq[r]
-					index = r
-					l++
-					break
-				}
-				r--
-			}
-			for r >= l {
-				if seq[l] > pivot {
-					seq[r] = seq[l]
-					index = l
-					r--
-					break
-				}
-				l++
-			}
-		}
-		seq[index] = pivot
-		return index
-	}
-	var quickSort func(seq []int, left, right int)
+func QuickSort2(seq []int) { // 第一快
+	var QuickSort func(seq []int, left, right int)
 
-	quickSort = func(seq []int, left, right int) {
+	QuickSort = func(seq []int, left, right int) {
+		//递归结束条件
 		if left > right {
 			return
 		}
-		pivotIndex := partition(seq, left, right)
-		quickSort(seq, left, pivotIndex-1)
-		quickSort(seq, pivotIndex+1, right)
+		// 分割并得到基准元素的位置
+		pivotIndex := partition2(seq, left, right)
+		QuickSort(seq, left, pivotIndex-1)
+		QuickSort(seq, pivotIndex+1, right)
 	}
-	quickSort(seq, 0, len(seq)-1)
+	QuickSort(seq, 0, len(seq)-1)
+}
+
+func partition2(seq []int, left, right int) int {
+	pivot := seq[left]  //取第一个元素作为基准元素
+	l, r := left, right //左右指针.
+	for r > l {
+		// 从左往右搜索一个比pivot小的值.
+		for r > l {
+			if seq[r] < pivot {
+				seq[l] = seq[r] // 将此值放在pivot的左边
+				l++             // 左指针右移.
+				break           // 找到了就退出此for.
+			}
+			r-- //没找到就一直往右找,直到r<l
+		}
+		// 从右往左搜索一个比pivot大的值.
+		for r > l {
+			if seq[l] > pivot {
+				seq[r] = seq[l] // 将此值放在pivot的右边
+				r--             //右指针左移.
+				break
+			}
+			l++ //没找到就一直往左找,直到r<l
+		}
+	}
+	seq[r] = pivot // 此时pivot的位置就为r
+	return r
+}
+
+func QuickSort3(seq []int) { // 第二快
+	var QuickSort func(seq []int, left, right int)
+
+	QuickSort = func(seq []int, left, right int) {
+		if left > right {
+			return
+		}
+		pivotIndex := partition3(seq, left, right)
+		QuickSort(seq, left, pivotIndex-1)
+		QuickSort(seq, pivotIndex+1, right)
+	}
+	QuickSort(seq, 0, len(seq)-1)
+}
+
+func partition3(seq []int, left, right int) int {
+	pivot := left
+	index := pivot + 1 //记录基准位置
+	for i := index; i <= right; i++ {
+		if seq[i] < seq[pivot] {
+			seq[i], seq[index] = seq[index], seq[i]
+			index++
+		}
+	}
+	seq[pivot], seq[index-1] = seq[index-1], seq[pivot]
+	return index - 1
 }
 
 func Test8(t *testing.T) {
-	seq := []int{2, 10, 8, 22, 34, 5, 12, 28, 21, 11}
-	// seq := []int{4, 7, 6, 5, 3, 2, 8, 1}
-	quickSort1(seq)
+	// seq := []int{10, 2, 8, 22, 34, 5, 12, 28, 21, 11,4, 7, 6, 5, 3, 2, 8, 1,}
+	seq := make([]int, 100)
+	for i := 0; i < 100; i++ {
+		seq[i] = rand.Intn(80)
+	}
+
+	QuickSort2(seq)
 	fmt.Println(seq)
 }
 
-// 比较快排与希尔
+// 比较快排2与快排3
+func Test10(t *testing.T) {
+
+	seq1 := make([]int, 20000000)
+	seq := make([]int, 20000000)
+	for i := 0; i < 20000000; i++ {
+		v := rand.Intn(100000000)
+		seq[i] = v
+		seq1[i] = v
+	}
+
+	t1 := time.Now()
+	//1000000	72.449583ms
+	//5000000	363.460375ms
+	//10000000 	751.975542ms
+	//20000000	1.5665955s
+	QuickSort3(seq)
+	t2 := time.Since(t1)
+	fmt.Println(t2)
+
+	t1 = time.Now()
+	//1000000	65.122542ms
+	//5000000	362.930584ms
+	//10000000 	736.2945ms
+	//20000000	1.52779375s
+	QuickSort2(seq1)
+	t2 = time.Since(t1)
+	fmt.Println(t2)
+
+	for i := 0; i < 20000000; i++ {
+		if seq[i] != seq1[i] {
+			fmt.Println("false")
+			return
+		}
+	}
+	fmt.Println(true)
+}
+
+// 比较快排1与快排2
+func Test9(t *testing.T) {
+
+	seq1 := make([]int, 20000000)
+	seq := make([]int, 20000000)
+	for i := 0; i < 20000000; i++ {
+		v := rand.Intn(100000000)
+		seq[i] = v
+		seq1[i] = v
+	}
+
+	t1 := time.Now()
+	//1000000	72.449583ms
+	//5000000	367.725375ms
+	//10000000 	757.364291ms
+	//20000000	1.59018475ss
+	QuickSort1(seq)
+	t2 := time.Since(t1)
+	fmt.Println(t2)
+
+	t1 = time.Now()
+	//1000000	65.122542ms
+	//5000000	362.930584ms
+	//10000000 	736.2945ms
+	//20000000	1.52674925s
+	QuickSort2(seq1)
+	t2 = time.Since(t1)
+	fmt.Println(t2)
+
+	for i := 0; i < 20000000; i++ {
+		if seq[i] != seq1[i] {
+			fmt.Println("false")
+			return
+		}
+	}
+	fmt.Println(true)
+}
+
+// 比较快排1与希尔
 func Test7(t *testing.T) {
 
 	seq1 := make([]int, 20000000)
@@ -121,8 +233,7 @@ func Test7(t *testing.T) {
 	//5000000	370.094083ms
 	//10000000 	777.220208ms
 	//20000000	1.59018475ss
-	// quickSort(seq)
-	quickSort1(seq)
+	QuickSort1(seq)
 	t2 := time.Since(t1)
 	fmt.Println(t2)
 
