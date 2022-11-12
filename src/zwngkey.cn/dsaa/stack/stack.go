@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-10-30 00:10:03
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-10-30 00:21:33
+ * @LastEditTime: 2022-11-12 21:51:09
  * @Description:
 	链表实现栈 + 泛型
 */
@@ -35,7 +35,7 @@ func (s *Stack[T]) IsEmpty() bool {
 	return s.length == 0
 }
 
-func (s *Stack[T]) Peek() (t T, error error) {
+func (s *Stack[T]) Peek() (t T, err error) {
 	if s.length == 0 {
 		return t, fmt.Errorf("空栈")
 	}

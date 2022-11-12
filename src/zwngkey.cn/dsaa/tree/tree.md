@@ -214,6 +214,7 @@
 ### 遍历二叉树递归算法
 
 - 二叉树先序遍历算法
+- 应用场景：运用最多的场合包括在树里进行搜索以及创建一棵新的树。
 ```go
 func PreOrderTraverse(t BiTree){
   if t == nil {
@@ -228,6 +229,7 @@ func PreOrderTraverse(t BiTree){
 
 
 - 二叉树中序遍历算法
+- 最常见的是二叉搜索树，由于二叉搜索树的性质就是左孩子小于根节点，根节点小于右孩子，对二叉搜索树进行中序遍历的时候，被访问到的节点大小是按顺序进行的。
 ```go
 func InOrderTraverse(t BiTree){
   if t == nil {
@@ -242,6 +244,7 @@ func InOrderTraverse(t BiTree){
 
 
 - 二叉树后序遍历算法
+- 在对某个节点进行分析的时候，需要来自左子树和右子树的信息。收集信息的操作是从树的底部不断地往上进行，好比你在修剪一棵树的叶子，修剪的方法是从外面不断地往根部将叶子一片片地修剪掉。
 ```go
 func PostOrderTraverse(t BiTree){
   if t == nil {
@@ -287,6 +290,67 @@ func InOrderTraverse(t BiTree){
   }
 }
 ```
+
+- 后序遍历非递归算法.
+![](image/image_20221112222208312312.png)
+```go
+// 后序遍历1(非递归实现)
+func (t *BiTree) PostOrderTreverse() {
+	s := stack.New[*BiTNode]() //用于记录根和子根结点
+	cur := t.root              //临时变量记录当前访问的结点.
+	var pre *BiTNode           //临时变量记录上一个访问到的结点,
+
+	// 访问结点.
+	var visit = func(node *BiTNode) {
+		fmt.Println(node.data)
+	}
+
+	for cur != nil || !s.IsEmpty() {
+		if cur != nil { //如果当前结点不为nil,就一直找它的左孩子.
+			s.Push(cur)
+			cur = cur.lchild
+		} else { //如果当前结点为nil,说明其父结点没有左节点或已经访问完了.
+			cur, _ = s.Peek() //拿出其父节点.
+			if cur.rchild != nil /*判断其父节点有无右孩子*/ && cur.rchild != pre /*  是否访问过其右孩子 */ {
+				cur = cur.rchild //接着判断其右孩子是否有左孩子.
+			} else { //如果没有,那么直接访问其父节点.
+				v, _ := s.Pop()
+				visit(v)  //对p进行访问.
+				pre = v   //记录访问过的结点.
+				cur = nil //将cur置空,进入下一层循环,直到栈内无元素.
+			}
+		}
+	}
+}
+```
+
+```go
+// 后序遍历2(非递归实现)
+// 算法:
+func (t *BiTree) PostOrderTreverse1() {
+	s := stack.New[*BiTNode]()
+	var cur *BiTNode //临时变量记录当前访问的结点.
+	var pre *BiTNode //临时变量记录上一个访问到的结点,
+	s.Push(t.root)   //先将 根节点入栈.
+
+	for !s.IsEmpty() {
+		cur, _ = s.Peek()
+		if (cur.lchild == nil && cur.rchild == nil) || (pre != nil && (pre == cur.lchild || pre == cur.rchild)) {
+			visit(cur)
+			s.Pop()
+			pre = cur
+		} else {
+			if cur.rchild != nil {
+				s.Push(cur.rchild)
+			}
+			if cur.lchild != nil {
+				s.Push(cur.lchild)
+			}
+		}
+	}
+}
+```
+
 
 <br>
 <br>
