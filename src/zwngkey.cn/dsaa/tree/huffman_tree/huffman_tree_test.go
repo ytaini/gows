@@ -13,8 +13,14 @@ import (
 )
 
 func Test(t *testing.T) {
-	ht := CreateHuffmanTree[int](5)
+	weights := []int{1, 1, 1, 2, 2, 2, 4, 4, 4, 5, 5, 9}
+	// weights := []float64{0.4,0.3,0.15,0.05,0.04,0.03,0.03}
+	ht := CreateHuffmanTree(weights)
 	for i := 1; i < len(ht); i++ {
 		fmt.Println(i, ht[i])
+	}
+	hc := CreateHuffmanCode(ht, len(weights))
+	for i := 1; i < len(hc); i++ {
+		fmt.Printf("%s\n", hc[i].Code)
 	}
 }

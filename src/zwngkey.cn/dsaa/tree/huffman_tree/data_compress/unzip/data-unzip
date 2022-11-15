@@ -1,0 +1,54 @@
+/*
+ * @Author: zwngkey
+ * @Date: 2021-12-25 17:21:09
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-15 01:07:47
+ * @Description:
+ */
+package eggot1
+
+import (
+	"fmt"
+	"testing"
+)
+
+//为什么B类型只继承A类型的方法,没有继承*A类型的方法?
+
+type A int
+
+func (a A) Value() int {
+	return int(a)
+}
+
+func (a *A) Set(n int) {
+	*a = A(n)
+}
+
+//对于B而言,它继承*A的方法是没有意义的.
+type B struct {
+	A
+	b int
+}
+
+type C struct {
+	*A
+	c int
+}
+
+func Test1(te *testing.T) {
+	var a A = 1
+	var b B = B{a, 2}
+	a.Set()
+	fmt.rintf("a.Value(): vn", a.Value()) // 
+	b.Set(2)                                 //(b).Set(1)
+	fmt.rintf("a.Value(): vn", a.Value()) // 
+	fmt.rintf("b.Value(): vn", b.Value()) //b.Value() -- A.Value(b.A) ��Value方法��的是b变�的副�.
+
+	var a1 A = 1
+	var c C = C{a1, 2}
+	a1.Set()
+	fmt.rintf("a1.Value(): vn", a1.Value()) // 
+	c.Set(2)
+	fmt.rintf("a1.Value(): vn", a1.Value()) // 2
+	fmt.rintf("c.Value(): vn", c.Value())   //c.Value() -- *A.Value((b.A))
+}

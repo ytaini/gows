@@ -1,7 +1,7 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-03 02:18:08
- * @LastEditTime: 2022-05-04 17:38:53
+ * @LastEditTime: 2022-11-15 00:34:18
  * @Description: Go中三种一等公民容器类型：数组、切片和映射。
  */
 
@@ -868,7 +868,7 @@ func Test17(t *testing.T) {
 func Test18(t *testing.T) {
 	var p *[5]int // nil
 
-	for i, _ := range p { // okay
+	for i := range p { // okay
 		fmt.Println(i)
 	}
 

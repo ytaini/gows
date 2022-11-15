@@ -2,9 +2,12 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-12 01:45:50
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-12 19:49:02
+ * @LastEditTime: 2022-11-14 01:57:13
  * @Description:
 	见binary_tree_sequential_storage.md
+
+	顺序存储二叉树的应用
+		堆排序
 */
 package binarytree
 

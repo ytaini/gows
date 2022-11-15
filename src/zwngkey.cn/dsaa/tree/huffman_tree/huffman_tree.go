@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-11 19:22:03
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-12 00:07:17
+ * @LastEditTime: 2022-11-15 00:12:31
  * @Description:
 	哈夫曼树构造算法的实现
 		通过一维结构数组.
@@ -10,7 +10,6 @@
 package huffman
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -25,19 +24,19 @@ type HTNode[T Number] struct {
 type HuffmanTree[T Number] []HTNode[T]
 
 // 构造哈夫曼树--哈夫曼算法
-func CreateHuffmanTree[T Number](n int) (ht HuffmanTree[T]) {
+func CreateHuffmanTree[T Number](input []T) (ht HuffmanTree[T]) {
+	n := len(input)
 	if n <= 1 {
 		return nil
 	}
 	m := 2*n - 1 //数组共2n-1个元素
 
 	ht = make([]HTNode[T], m+1) //0号单元未使用,ht[m]表达根节点.
-	// rand.Seed(time.Now().Unix())
-	var w T = 0
+	// var w T = 0
 	for i := 1; i <= n; i++ { //输入前n个元素的weight值.
-		fmt.Scan(&w)
-		ht[i].weight = w
-		// ht[i].weight = (T)(rand.Intn(10))
+		// fmt.Scan(&w)
+		// ht[i].weight = ww
+		ht[i].weight = input[i-1]
 	}
 	// 初始化结束,下面建立哈夫曼树.
 	for i := n + 1; i <= m; i++ { //合并产生n-1个结点--构造huffman树.
