@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-15 01:08:56
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-15 08:43:25
+ * @LastEditTime: 2022-11-16 21:12:30
  * @Description:
  */
 package datacompress
@@ -52,9 +52,17 @@ func Test(t *testing.T) {
 	}
 	defer inFile.Close()
 	reader := bufio.NewReader(inFile)
-	buf := make([]byte, contentBuffer)
+	buf := make([]byte, bufferSize)
 	v, _, _ := reader.ReadLine()
 	fmt.Println(v)
 	i, _ := reader.Read(buf)
 	fmt.Println(buf[:i])
+}
+
+func Test3(t *testing.T) {
+	inPath := "source/data2"
+	imap := GetFrequencyMap(inPath)
+	nodeList := New(imap)
+	root := CreateHuffmanTree(nodeList)
+	CreateEncodingTable(root)
 }
