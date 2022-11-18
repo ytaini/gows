@@ -1,20 +1,20 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-04-22 07:36:29
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 05:51:15
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-18 14:54:41
  * @Description:
- */
+
+	给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+
+	子数组 是数组中的一个连续部分。
+*/
 package dp
 
 import (
 	"zwngkey.cn/dsaa/util"
 )
 
-/*
-给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
-子数组 是数组中的一个连续部分。
-*/
 func MaxSubArray(nums []int) int {
 	n := len(nums)
 	max := nums[n-1]
@@ -31,13 +31,13 @@ func MaxSubArray(nums []int) int {
 
 func MaxSubArray1(nums []int) int {
 	n := len(nums)
-	max := nums[0]
-	//f[i]:表示以i结尾的所有子数组的和中的最大值.
+	//f[i]:表示以nums[i]结尾的所有子数组的和中的最大值.
 	f := make([]int, n)
-	f[0] = nums[0]
-	for i := 0; i < n; i++ {
-		f[i] = util.Max(f[i-1]+nums[i], nums[i])
-		max = util.Max(max, f[i])
+	f[0] = nums[0] //初始条件
+	maxSum := f[0] //初始最大和
+	for i := 1; i < n; i++ {
+		f[i] = util.Max(f[i-1]+nums[i], nums[i]) //状态转移方程
+		maxSum = util.Max(maxSum, f[i])          //更新最大和
 	}
-	return max
+	return maxSum
 }

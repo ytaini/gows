@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-02 16:40:34
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-03 17:39:01
+ * @LastEditTime: 2022-11-18 04:33:52
  * @Description:
 	下面的代码，将使用始于零的数组来表示字符串. 比如，若字符串S = "ABC"，则S[2]表示字符'C'
 
@@ -20,7 +20,7 @@ import (
 	以模式串P ="ABCDABD"为例
 	- 模式串P 的 next 数组定义为：
 		一般定义next[0] = -1
-		next[k],next 数组各值的含义：代表当前位置的字符P[k]之前的子串P[0:k]的最大相同前后缀长度。
+		next[k],next 数组各值的含义：代表当前位置的字符P[k]之前的子串P[0:k]的最大相同前后缀长度(最长可匹配前缀字串结尾字符下标)。
 		next 数组相当于告诉我们： 如模式串P中在j 处的字符跟文本串S在i 处的字符匹配失配时，
 			j需要移动到 P[最大相同前后缀的长度]的位置,也就是移动到P[next[j]]的位置.即next数组其实记录了此时j需要回退到P的哪一个下标.
 			这样就可以用next [j] 处的字符继续跟文本串i 处的字符匹配.
@@ -158,8 +158,8 @@ func KmpSearchByNext(str, substr string) (index int) {
 	return -1
 }
 
-// 直接使用next数组.
 // 上面👆🏻代码的改进.
+// 使用nextVal数组.
 func KmpSearchByNextval(str, substr string) (index int) {
 	// next := KmpNext(substr)
 	next := KmpNextval(substr)
