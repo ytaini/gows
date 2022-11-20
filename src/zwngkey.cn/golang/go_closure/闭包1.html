@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <button id="hello">hello</button>
-  <button id="world">world</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="hello">hello</button>
+    <button id="world">world</button>
 
-  <script>
-    function test(obj){
-      return function(){alert(obj.id)}
-    }
+    <script>
+      function test(obj) {
+        return function () {
+          alert(obj.id);
+        };
+      }
 
-    let nodes = document.getElementsByTagName("button")
+      let nodes = document.getElementsByTagName("button");
 
-    for (let i = 0; i < nodes.length; i++) {
-      // var node = nodes[i]
-      // nodes[i].addEventListener("click",function(){alert(node.id)})
+      for (let i = 0; i < nodes.length; i++) {
+        // var node = nodes[i]
+        // nodes[i].addEventListener("click",function(){alert(node.id)})
 
-      // let a = test(nodes[i])
-      // nodes[i].addEventListener("click",a)
+        // let a = test(nodes[i])
+        // nodes[i].addEventListener("click",a)
 
-      nodes[i].addEventListener("click",(function(param){return function(){alert(param.id)}})(nodes[i]))
-      
-    }
-  </script>
-</body>
+        nodes[i].addEventListener(
+          "click",
+          (function (param) {
+            return function () {
+              alert(param.id);
+            };
+          })(nodes[i])
+        );
+      }
+    </script>
+  </body>
 </html>

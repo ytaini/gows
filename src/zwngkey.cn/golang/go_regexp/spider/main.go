@@ -142,7 +142,7 @@ func parseHTML(html string) [][]string {
 	return res
 }
 
-//获取网页信息
+// 获取网页信息
 func fetchURL(url string) string {
 	resp, err := http.Get(url)
 	if err != nil {

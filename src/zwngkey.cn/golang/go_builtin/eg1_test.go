@@ -1,10 +1,11 @@
 /*
- * @Author: zwngkey
- * @Date: 2022-05-12 17:33:36
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-12 17:57:15
- * @Description:
-	Go语言new和make的使用区别和最佳实践
+  - @Author: zwngkey
+  - @Date: 2022-05-12 17:33:36
+
+* @LastEditors: wzmiiiiii
+* @LastEditTime: 2022-11-20 11:00:06
+  - @Description:
+    Go语言new和make的使用区别和最佳实践
 */
 package gobuiltin
 
@@ -25,8 +26,8 @@ package gobuiltin
 		1.分配和初始化内存。
 		2.只能用于slice, map和chan这3个类型，不能用于其它类型。
 			如果是用于slice类型，make函数的第2个参数表示slice的长度，这个参数必须给值。
-		3.返回的是原始类型，也就是slice, map和chan，不是返回指向slice, map和chan的指针。
-
+		3.返回的是原始类型，也就是slice, map和chan三个类型本身.不是返回指向slice, map和chan的指针。
+			因为这三种类型就是引用类型.
 
 	为什么针对slice, map和chan类型专门定义一个make函数？
 		这是因为slice, map和chan的底层结构上要求在使用slice，map和chan的时候必须初始化，如果不初始化，

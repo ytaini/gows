@@ -1,8 +1,8 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-13 02:44:37
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 07:03:26
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-20 18:25:10
  * @Description:
  */
 package gopgklog
@@ -87,8 +87,9 @@ func Test11(t *testing.T) {
 */
 
 /*
-	上面的例子是使用log包自带的std这个Logger指针把日志输出到控制台，我们也可以使用std把日志输出到指定文件，
-		调用SetOutput设置日志输出的参数即可。如下代码示例：
+上面的例子是使用log包自带的std这个Logger指针把日志输出到控制台，我们也可以使用std把日志输出到指定文件，
+
+	调用SetOutput设置日志输出的参数即可。如下代码示例：
 */
 func Test12(t *testing.T) {
 	filename := fmt.Sprintf("app_%s.log", time.Now().Format("2006-01-02-15-04-05"))
@@ -111,22 +112,24 @@ func Test12(t *testing.T) {
 }
 
 /*
-	方式2：自定义Logger
-		方式1只建议打印到控制台的时候使用，对于打印到日志文件的场景，建议使用自定义Logger，参考如下代码：
+方式2：自定义Logger
 
-		注意：New函数返回的是Logger指针，Logger结构体的方法都是指针接受者。
+	方式1只建议打印到控制台的时候使用，对于打印到日志文件的场景，建议使用自定义Logger，参考如下代码：
 
+	注意：New函数返回的是Logger指针，Logger结构体的方法都是指针接收者。
 
-	总结方式2的使用流程如下：
-		1.通过log.New创建一个新的Logger指针，在New函数里指定好output, prefix和flag等日志属性
-		2.调用log包里的辅助函数Print[f|ln]，Fatal[f|ln]，Panic[f|ln]打印日志
+总结方式2的使用流程如下：
 
-	自定义Logger的方式，也可以实现打印日志到控制台，也可以实现同时打印日志到日志文件和控制台，
-		只需要给New函数的第一个参数传递对应的io.Writer类型参数即可。
+	1.通过log.New创建一个新的Logger指针，在New函数里指定好output, prefix和flag等日志属性
+	2.调用log包里的辅助函数Print[f|ln]，Fatal[f|ln]，Panic[f|ln]打印日志
 
-	如果要打印到控制台，参数可以用os.Stdout或者os.Stderr
+自定义Logger的方式，也可以实现打印日志到控制台，也可以实现同时打印日志到日志文件和控制台，
 
-	如果要同时打印到控制台和日志文件，参数可以用io.MultiWriter(os.Stdout, f)
+	只需要给New函数的第一个参数传递对应的io.Writer类型参数即可。
+
+如果要打印到控制台，参数可以用os.Stdout或者os.Stderr
+
+如果要同时打印到控制台和日志文件，参数可以用io.MultiWriter(os.Stdout, f)
 */
 func Test13(t *testing.T) {
 	// 打开文件

@@ -1,15 +1,19 @@
 /*
- * @Author: zwngkey
- * @Date: 2022-04-26 15:23:16
- * @LastEditTime: 2022-04-30 22:12:01
- * @Description:
-	defer语句的一些易错点
+  - @Author: zwngkey
+  - @Date: 2022-04-26 15:23:16
+
+* @LastEditTime: 2022-11-20 15:09:29
+  - @Description:
+    defer语句的一些易错点
 */
 package godefer
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
-func Eg1() {
+func Test4(t *testing.T) {
 	fmt.Println(f1()) //2
 	fmt.Println(f2()) //1
 	fmt.Println(f3()) //1

@@ -1,8 +1,8 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-11 23:28:26
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-12 14:57:09
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-20 13:07:36
  * @Description:
  */
 
@@ -92,10 +92,10 @@ func TestEg1(t *testing.T) {
 	for i := 0; i < size; i++ {
 		go func() {
 			defer wg.Done()
-			once.Do(print)
 			once.Do(func() {
 				print1(1, "once")
 			})
+			once.Do(print)
 		}()
 	}
 	wg.Wait()
@@ -187,8 +187,8 @@ func TestEg3(t *testing.T) {
 }
 
 /*
-	加锁
-	示例代码，通过对共享变量加互斥锁来保证并发安全，结果和预期相符。
+加锁
+示例代码，通过对共享变量加互斥锁来保证并发安全，结果和预期相符。
 */
 func TestEg4(t *testing.T) {
 	var wg sync.WaitGroup
@@ -213,41 +213,42 @@ func TestEg4(t *testing.T) {
 }
 
 /*
-	sync.RWMutex
-		RWMutex是sync包里的一个结构体类型，含义是读写锁。RWMutex变量的零值是一个没有加锁的mutex。
+sync.RWMutex
 
-		不要对RWMutex变量使用值传递的方式进行函数调用。
+	RWMutex是sync包里的一个结构体类型，含义是读写锁。RWMutex变量的零值是一个没有加锁的mutex。
 
-		RWMutex允许一个goroutine对其加锁，其它goroutine对其解锁，不要求加锁和解锁在同一个goroutine里。
+	不要对RWMutex变量使用值传递的方式进行函数调用。
 
-		RWMutex结构体类型有5个方法：
-			Lock()，加写锁。某个goroutine加了写锁后，其它goroutine不能获取读锁，也不能获取写锁
-				func (rw *RWMutex) Lock()
+	RWMutex允许一个goroutine对其加锁，其它goroutine对其解锁，不要求加锁和解锁在同一个goroutine里。
 
-			Unlock()，释放写锁。
-				func (rw *RWMutex) Unlock()
+	RWMutex结构体类型有5个方法：
+		Lock()，加写锁。某个goroutine加了写锁后，其它goroutine不能获取读锁，也不能获取写锁
+			func (rw *RWMutex) Lock()
 
-			RLock()，加读锁。某个goroutine加了读锁后，其它goroutine可以获取读锁，但是不能获取写锁
-				func (rw *RWMutex) RLock()
+		Unlock()，释放写锁。
+			func (rw *RWMutex) Unlock()
 
-			RUnlock()，释放读锁
-				func (rw *RWMutex) RUnlock()
+		RLock()，加读锁。某个goroutine加了读锁后，其它goroutine可以获取读锁，但是不能获取写锁
+			func (rw *RWMutex) RLock()
 
-			RLocker()，获取一个类型为Locker的接口，Locker类型定义了Lock()和Unlock()方法
-				func (rw *RWMutex) RLocker() Locker
+		RUnlock()，释放读锁
+			func (rw *RWMutex) RUnlock()
 
-		类型Locker的定义如下
-			type Locker interface {
-				Lock()
-				Unlock()
-			}
+		RLocker()，获取一个类型为Locker的接口，Locker类型定义了Lock()和Unlock()方法
+			func (rw *RWMutex) RLocker() Locker
 
-		Mutex和RWMutex这2个结构体类型实现了Locker这个interface里的所有方法，
-			因此可以把Mutex和RWMutex变量或者指针赋值给Locker实例，然后通过Locker实例来加锁和解锁，
-				这个在条件变量sync.Cond里会用到.
+	类型Locker的定义如下
+		type Locker interface {
+			Lock()
+			Unlock()
+		}
 
-		注意事项
-			Mutex和RWMutex都不是递归锁，不可重入
+	Mutex和RWMutex这2个结构体类型实现了Locker这个interface里的所有方法，
+		因此可以把Mutex和RWMutex变量或者指针赋值给Locker实例，然后通过Locker实例来加锁和解锁，
+			这个在条件变量sync.Cond里会用到.
+
+	注意事项
+		Mutex和RWMutex都不是递归锁，不可重入
 */
 type Counter struct {
 	count int
@@ -362,8 +363,8 @@ func TestEg6(t *testing.T) {
 	wg.Wait()
 }
 
-//sync.Cond基本使用
-//下述代码实现了主线程对多个goroutine的通知的功能。
+// sync.Cond基本使用
+// 下述代码实现了主线程对多个goroutine的通知的功能。
 func TestEg7(t *testing.T) {
 	var locker sync.Mutex
 	var cond = sync.NewCond(&locker)
@@ -397,19 +398,22 @@ func TestEg7(t *testing.T) {
 }
 
 /*
-	抛出一个问题：
-		主线程执行的时候，如果并不想触发所有的协程，想让不同的协程可以有自己的触发条件，应该怎么实现？
+抛出一个问题：
 
-	下面就是一个具体的需求：
-		有四个worker和一个master，worker等待master去分配指令，
-			master一直在计数，计数到5的时候通知第一个worker，计数到10的时候通知第二个和第三个worker。
+	主线程执行的时候，如果并不想触发所有的协程，想让不同的协程可以有自己的触发条件，应该怎么实现？
 
-	首先列出几种解决方式
-		1、所有worker循环去查看master的计数值，计数值满足自己条件的时候，触发操作 >>>>>>>>>弊端：无谓的消耗资源
-		2、用channel来实现，几个worker几个channel，eg:worker1的协程里<-channel(worker1)进行阻塞，计数值到5的时候，
-			给worker1的channel放入值，阻塞解除，worker1开始工作。
-			 >>>>>>>弊端：channel还是比较适用于一对一的场景，一对多的时候，需要起很多的channel，不是很美观
-		3、用条件变量sync.Cond，针对多个worker的话，用broadcast，就会通知到所有的worker。
+下面就是一个具体的需求：
+
+	有四个worker和一个master，worker等待master去分配指令，
+		master一直在计数，计数到5的时候通知第一个worker，计数到10的时候通知第二个和第三个worker。
+
+首先列出几种解决方式
+
+	1、所有worker循环去查看master的计数值，计数值满足自己条件的时候，触发操作 >>>>>>>>>弊端：无谓的消耗资源
+	2、用channel来实现，几个worker几个channel，eg:worker1的协程里<-channel(worker1)进行阻塞，计数值到5的时候，
+		给worker1的channel放入值，阻塞解除，worker1开始工作。
+		 >>>>>>>弊端：channel还是比较适用于一对一的场景，一对多的时候，需要起很多的channel，不是很美观
+	3、用条件变量sync.Cond，针对多个worker的话，用broadcast，就会通知到所有的worker。
 */
 func TestEg8(t *testing.T) {
 	var lock sync.Mutex

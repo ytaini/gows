@@ -43,4 +43,4 @@ func Alignof(x ArbitraryType) uintptr
 ```
 
 # 什么是内存对齐?为什么要内存对齐?
-
+https://www.liwenzhou.com/posts/Go/struct-memory-layout/

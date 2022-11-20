@@ -1,8 +1,8 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-11 20:03:17
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-11 23:11:21
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-20 15:16:52
  * @Description:
  */
 package gopanicrecover
@@ -38,8 +38,6 @@ import (
 
 		一些致命性错误不属于恐慌
 			对于官方标准编译器来说，很多致命性错误（比如堆栈溢出和内存不足）不能被恢复。它们一旦产生，程序将崩溃。
-
-
 
 */
 
