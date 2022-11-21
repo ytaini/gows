@@ -1,7 +1,7 @@
 /*
  * @Author: zwngkey
  * @Date: 2021-12-12 15:00:25
- * @LastEditTime: 2022-05-13 06:26:43
+ * @LastEditTime: 2022-11-21 16:45:44
  * @Description:
  */
 package main
@@ -13,15 +13,15 @@ import (
 var logger mylogger.Logger
 
 func main() {
-	// log := mylogger.NewConsoleLogger("Debug")
+	// logger = mylogger.NewConsoleLogger(mylogger.DEBUG)
 
-	// log.Debug("这是一个Debug级别的日志. err: %s", "asfdsaf")
-	// log.Info("这是一个Info级别的日志")
-	// log.Warning("这是一个Waring级别的日志")
-	// log.Error("这是一个Error级别的日志")
-	// log.Fatal("这是一个Fatal级别的日志")
+	// logger.Debug("这是一个Debug级别的日志. err: %s", "asfdsaf")
+	// logger.Info("这是一个Info级别的日志")
+	// logger.Warning("这是一个Waring级别的日志")
+	// logger.Error("这是一个Error级别的日志")
+	// logger.Fatal("这是一个Fatal级别的日志")
 
-	logger = mylogger.NewFlieLogger("./", "xx.log", "Info")
+	logger = mylogger.NewFileLogger("", "xx.log", mylogger.INFO)
 
 	// logger, ok := logger.(*mylogger.FileLogger)
 

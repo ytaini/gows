@@ -1,3 +1,10 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-07-16 06:20:04
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-21 16:36:35
+ * @Description:
+ */
 package mylogger
 
 import (
@@ -9,6 +16,35 @@ import (
 
 type logLevel int
 
+type level string
+
+var maxSize int64 = 1 * 1024 * 1024
+
+const (
+	ILLEGAL = "ILLEGAL"
+	DEBUG   = "DEBUG"
+	INFO    = "INFO"
+	WARNING = "WARNING"
+	ERROR   = "ERROR"
+	FATAL   = "FATAL"
+)
+
+const (
+	illegal logLevel = iota
+	debug
+	info
+	warning
+	err
+	fatal
+)
+
+const formatString = "2006/01/02 15:04:05.000"
+
+const (
+	errIllegal = "please input legal log level!!!"
+	errCaller  = "runtime.Caller() failed!!\n"
+)
+
 type Logger interface {
 	Debug(msg string, a ...any)
 	Info(msg string, a ...any)
@@ -17,88 +53,49 @@ type Logger interface {
 	Fatal(msg string, a ...any)
 }
 
-const (
-	Illegal logLevel = iota
-	Debug
-	Info
-	Warning
-	Error
-	Fatal
-)
-
-func checkLogLevel(logLevel logLevel) bool {
-	return logLevel == Illegal
+func checkLogLevel(ll logLevel) bool {
+	return ll == illegal
 }
 
-func NewConsoleLogger(logLevel string) (cl *ConsoleLogger) {
-	lLevel := parseLogLevel(logLevel)
-	if checkLogLevel(lLevel) {
-		log.Fatalf("please input legal log level!!!")
-	}
-	return &ConsoleLogger{
-		logLevel: lLevel,
-	}
-}
-
-func NewFlieLogger(filePath, fileName, logLevel string) (fl *FileLogger) {
-	lLevel := parseLogLevel(logLevel)
-	if checkLogLevel(lLevel) {
-		log.Fatalf("please input legal log level!!!")
-	}
-	errFilename := fileName + ".err"
-	entry := &FileLogger{
-		logLevel:    lLevel,
-		filePath:    filePath,
-		fileName:    fileName,
-		errFileName: errFilename,
-		maxSize:     maxSize,
-	}
-	err := entry.initFile()
-	if err != nil {
-		log.Fatalf("err: %v\n", err)
-	}
-	return entry
-}
-
-func parseLogLevel(ll string) logLevel {
-	ll = strings.ToLower(ll)
+func parseLogLevel(ll level) logLevel {
 	switch ll {
-	case "debug":
-		return Debug
-	case "info":
-		return Info
-	case "warning":
-		return Warning
-	case "error":
-		return Error
-	case "fatal":
-		return Fatal
+	case DEBUG:
+		return debug
+	case INFO:
+		return info
+	case WARNING:
+		return warning
+	case ERROR:
+		return err
+	case FATAL:
+		return fatal
 	default:
-		return Illegal
+		return illegal
 	}
 }
 
 func parseLogLevelString(ll logLevel) string {
 	switch ll {
-	case Debug:
-		return "Debug"
-	case Info:
-		return "Info"
-	case Warning:
-		return "Warning"
-	case Error:
-		return "Error"
-	case Fatal:
-		return "Fatal"
+	case debug:
+		return DEBUG
+	case info:
+		return INFO
+	case warning:
+		return WARNING
+	case err:
+		return ERROR
+	case fatal:
+		return FATAL
 	default:
-		return "Illegal"
+		return ILLEGAL
 	}
 }
 
+// 获取调用者函数名,所在文件,所在行号.
 func getInfo(skip int) (funcName, fileName string, lineNo int) {
 	pc, filePath, lineNo, ok := runtime.Caller(skip)
 	if !ok {
-		log.Fatalf("runtime.Caller() failed!!\n")
+		log.Fatalf(errCaller)
 	}
 	temp := strings.Split(runtime.FuncForPC(pc).Name(), "/")
 	funcName = temp[len(temp)-1]

@@ -1,9 +1,10 @@
 /*
- * @Author: zwngkey
- * @Date: 2021-12-11 16:05:03
- * @LastEditTime: 2022-05-13 06:21:58
- * @Description:
- */
+  - @Author: zwngkey
+  - @Date: 2021-12-11 16:05:03
+  - @LastEditTime: 2022-11-21 11:10:45
+  - @Description:
+    类似实现cat命令
+*/
 package main
 
 import (
@@ -20,7 +21,8 @@ func main() {
 	flag.Parse()
 
 	if flag.NArg() == 0 {
-		log.Fatalln("err: please input param!!")
+		log.Println("err: please input param!!")
+		return
 	}
 
 	for i := 0; i < flag.NArg(); i++ {

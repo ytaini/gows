@@ -1,3 +1,10 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-07-16 06:20:04
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-21 11:32:18
+ * @Description:
+ */
 package gobasic
 
 /*
@@ -6,7 +13,7 @@ package gobasic
 */
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -20,11 +27,10 @@ func Eg81() {
 		fmt.Println(err)
 		return
 	}
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println(string(body))
-
 }

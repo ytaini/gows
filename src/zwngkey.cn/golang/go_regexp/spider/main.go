@@ -1,8 +1,8 @@
 /*
- * @Author: imzw
+ * @Author: wzmiiiiii
  * @Date: 2022-07-25 15:03:50
- * @LastEditors: error: git config user.name && git config user.email & please set dead value or install git
- * @LastEditTime: 2022-07-25 18:17:21
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-21 11:53:26
  * @Description:
  */
 package main
@@ -10,7 +10,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"regexp"
@@ -155,7 +155,7 @@ func fetchURL(url string) string {
 
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
 		log.Panic("failed to ReadAll ", err)

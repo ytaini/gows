@@ -1,16 +1,22 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-07-16 06:20:04
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-21 10:34:25
+ * @Description:
+ */
 package main
 
 import (
 	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 )
 
 func readFile1() {
-	file, err := os.OpenFile("./main.go", os.O_RDONLY, 0)
+	file, err := os.OpenFile("main.go", os.O_RDONLY, 0)
 
 	if err != nil {
 		log.Fatalln("打开文件失败 err", err)
@@ -23,24 +29,20 @@ func readFile1() {
 
 	for {
 		line, err := reader.ReadString('\n')
-
+		fmt.Printf("%q\n", line)
+		// fmt.Print(line)
 		if err == io.EOF {
 			break
 		}
-
 		if err != nil {
 			log.Fatalln("读取文件失败")
 			return
 		}
-
-		fmt.Print(line)
-
 	}
 }
 
 func readFile2() {
-
-	content, err := ioutil.ReadFile("./main.go")
+	content, err := os.ReadFile("./main.go")
 	if err != nil {
 		log.Fatalln(err)
 		return
@@ -49,5 +51,7 @@ func readFile2() {
 }
 
 func main() {
+	readFile1()
+	fmt.Println("---------")
 	readFile2()
 }

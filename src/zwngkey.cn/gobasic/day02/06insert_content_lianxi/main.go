@@ -1,3 +1,10 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-07-16 06:20:04
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-21 11:14:08
+ * @Description:
+ */
 package main
 
 import (
@@ -6,11 +13,11 @@ import (
 	"os"
 )
 
-//insertContentInText 在文件某个位置添加指定内容
-//src: 源文件路径
-//insertSrc: 要添加的内容
-//localtion: 从指定位置开始插入
-func insertContentInText(src string, insertSrc string, localtion int64) {
+// insertContentInText 在文件某个位置添加指定内容
+// src: 源文件路径
+// insertSrc: 要添加的内容
+// localtion: 从指定位置开始插入
+func InsertContentInText(src string, insertSrc string, localtion int64) {
 	file, err := os.Open(src)
 	if err != nil {
 		log.Fatalf("open %s file failed,err: %v\n", src, err)
@@ -57,7 +64,7 @@ func insertContentInText(src string, insertSrc string, localtion int64) {
 	fmt.Println("文件添加内容成功")
 }
 
-func insertContentInText2(src string, insertSrc string, localtion int64) {
+func InsertContentInText2(src string, insertSrc string, localtion int64) {
 	file, err := os.OpenFile(src, os.O_RDWR, 0644)
 	if err != nil {
 		log.Fatalf("open %s file failed,err: %v\n", src, err)
@@ -88,6 +95,6 @@ func insertContentInText2(src string, insertSrc string, localtion int64) {
 }
 
 func main() {
-	insertContentInText("./test", "123", 5)
-	insertContentInText2("./test", "123", 5)
+	// InsertContentInText("./test", "123", 5)
+	InsertContentInText2("./test", "123", 5)
 }

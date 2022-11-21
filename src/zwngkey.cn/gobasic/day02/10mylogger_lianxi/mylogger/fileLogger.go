@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-var maxSize int64 = 1 * 1024 * 1024
-
 type FileLogger struct {
 	logLevel
 	filePath, fileName, errFileName string
@@ -17,30 +15,64 @@ type FileLogger struct {
 	logFile, errLogFile             *os.File
 }
 
-func (fl *FileLogger) SetLogLevel(logLevel string) {
+func NewFileLogger(filePath, fileName string, logLevel level) (f *FileLogger) {
+	lLevel := parseLogLevel(logLevel)
+	if checkLogLevel(lLevel) {
+		log.Fatalf(errIllegal)
+	}
+	errFilename := fileName + ".err"
+	f = &FileLogger{
+		logLevel:    lLevel,
+		filePath:    filePath,
+		fileName:    fileName,
+		errFileName: errFilename,
+		maxSize:     maxSize,
+	}
+	err := f.initFile()
+	if err != nil {
+		log.Fatalf("err: %v\n", err)
+	}
+	return f
+}
+
+func (f *FileLogger) initFile() error {
+	file1, err1 := os.OpenFile(f.filePath+f.fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err1 != nil {
+		return err1
+	}
+
+	file2, err2 := os.OpenFile(f.filePath+f.errFileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err2 != nil {
+		return err2
+	}
+	f.logFile = file1
+	f.errLogFile = file2
+	return nil
+}
+
+func (f *FileLogger) SetLogLevel(logLevel level) {
 	ll := parseLogLevel(logLevel)
 	if checkLogLevel(ll) {
-		log.Fatalf("please input legal log level!!!")
+		log.Fatalf(errIllegal)
 	}
-	fl.logLevel = ll
+	f.logLevel = ll
 }
 
-func (fl *FileLogger) SetFileMaxSize(size int64) {
-	fl.maxSize = size
+func (f *FileLogger) SetFileMaxSize(size int64) {
+	f.maxSize = size
 }
 
-func (fl *FileLogger) checkFileSize(f *os.File) {
+func (f *FileLogger) checkFileSize(fl *os.File) {
 
-	fileInfo, err := f.Stat()
+	fileInfo, err := fl.Stat()
 	if err != nil {
 		log.Fatalf("err: %v", err)
 	}
 
-	if fileInfo.Size() < fl.maxSize {
+	if fileInfo.Size() < f.maxSize {
 		return
 	}
-
-	err1 := f.Close()
+	err1 := fl.Close()
 	if err1 != nil {
 		log.Fatalf("err: %v", err)
 	}
@@ -48,11 +80,10 @@ func (fl *FileLogger) checkFileSize(f *os.File) {
 	flag := strings.HasSuffix(fileInfo.Name(), ".err")
 	now := time.Now().UnixNano()
 	var fullName string
-
 	if flag {
-		fullName = fl.filePath + fl.errFileName
+		fullName = f.filePath + f.errFileName
 	} else {
-		fullName = fl.filePath + fl.fileName
+		fullName = f.filePath + f.fileName
 	}
 
 	newName := fullName + ".bak" + fmt.Sprintf("%v", now)
@@ -65,65 +96,51 @@ func (fl *FileLogger) checkFileSize(f *os.File) {
 	}
 
 	if flag {
-		fl.errLogFile = file
+		f.errLogFile = file
 	} else {
-		fl.logFile = file
+		f.logFile = file
 	}
 
 }
 
-func (fl *FileLogger) initFile() error {
-	file1, err1 := os.OpenFile(fl.filePath+fl.fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	if err1 != nil {
-		return err1
-	}
-
-	file2, err2 := os.OpenFile(fl.filePath+fl.errFileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	if err2 != nil {
-		return err2
-	}
-	fl.logFile = file1
-	fl.errLogFile = file2
-	return nil
-}
-
-func (fl *FileLogger) log(ll logLevel, msg string, a ...any) {
-	if fl.logLevel > ll {
+func (f *FileLogger) log(ll logLevel, msg string, a ...any) {
+	if f.logLevel > ll {
 		return
 	}
 	msg = fmt.Sprintf(msg, a...)
 	now := time.Now()
-	timeString := now.Format("2006/01/02 15:04:05.000")
+	timeString := now.Format(formatString)
 	funcName, fileName, lineNo := getInfo(3)
-	fl.checkFileSize(fl.logFile)
-	fmt.Fprintf(fl.logFile, "[%s] [%-7s] [%s/%s():%d] %s\n", timeString, parseLogLevelString(ll), fileName, funcName, lineNo, msg)
-	if ll >= Error {
-		fl.checkFileSize(fl.errLogFile)
-		fmt.Fprintf(fl.errLogFile, "[%s] [%-7s] [%s/%s():%d] %s\n", timeString, parseLogLevelString(ll), fileName, funcName, lineNo, msg)
+	f.checkFileSize(f.logFile)
+	fmtStr := "[%s] [%-7s] [%s/%s():%d] %s\n"
+	fmt.Fprintf(f.logFile, fmtStr, timeString, parseLogLevelString(ll), fileName, funcName, lineNo, msg)
+	if ll >= err {
+		f.checkFileSize(f.errLogFile)
+		fmt.Fprintf(f.errLogFile, fmtStr, timeString, parseLogLevelString(ll), fileName, funcName, lineNo, msg)
 	}
 
 }
 
-func (fl *FileLogger) CloseLogFile() {
-	fl.logFile.Close()
+func (f *FileLogger) CloseLogFile() {
+	f.logFile.Close()
 }
 
-func (fl *FileLogger) CloseErrLogFile() {
-	fl.errLogFile.Close()
+func (f *FileLogger) CloseErrLogFile() {
+	f.errLogFile.Close()
 }
 
-func (fl *FileLogger) Debug(msg string, a ...any) {
-	fl.log(Debug, msg, a...)
+func (f *FileLogger) Debug(msg string, a ...any) {
+	f.log(debug, msg, a...)
 }
-func (fl *FileLogger) Info(msg string, a ...any) {
-	fl.log(Info, msg, a...)
+func (f *FileLogger) Info(msg string, a ...any) {
+	f.log(info, msg, a...)
 }
-func (fl *FileLogger) Warning(msg string, a ...any) {
-	fl.log(Warning, msg, a...)
+func (f *FileLogger) Warning(msg string, a ...any) {
+	f.log(warning, msg, a...)
 }
-func (fl *FileLogger) Error(msg string, a ...any) {
-	fl.log(Error, msg, a...)
+func (f *FileLogger) Error(msg string, a ...any) {
+	f.log(err, msg, a...)
 }
-func (fl *FileLogger) Fatal(msg string, a ...any) {
-	fl.log(Fatal, msg, a...)
+func (f *FileLogger) Fatal(msg string, a ...any) {
+	f.log(fatal, msg, a...)
 }

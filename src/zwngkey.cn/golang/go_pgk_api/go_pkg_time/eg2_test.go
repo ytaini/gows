@@ -14,8 +14,9 @@ import (
 )
 
 /*
-	Since(t)函数:
-		返回从t开始经过的时间。它是time.Now().Sub(t)的简写。
+Since(t)函数:
+
+	返回从t开始经过的时间。它是time.Now().Sub(t)的简写。
 */
 func TestEg21(t *testing.T) {
 	startTime := time.Now()

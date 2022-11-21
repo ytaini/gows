@@ -1,9 +1,0 @@
-package main
-
-import (
-	"ytaini.com/zwngkey/day02/04copy_file/copyfile"
-)
-
-func main() {
-	copyfile.CopyFile("./main.go", "123")
-}

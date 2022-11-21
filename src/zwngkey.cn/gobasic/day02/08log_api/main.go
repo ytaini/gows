@@ -1,3 +1,10 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-07-16 06:20:04
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-21 11:23:33
+ * @Description:
+ */
 package main
 
 import (
@@ -18,5 +25,4 @@ func main() {
 	log.Println("普通日志")
 	log.Printf("putong%s\n", "日志")
 	log.Fatalln("123")
-	log.Panicln("1234")
 }

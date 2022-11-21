@@ -1,3 +1,11 @@
+/*
+  - @Author: wzmiiiiii
+  - @Date: 2022-07-16 06:20:04
+  - @LastEditors: wzmiiiiii
+  - @LastEditTime: 2022-11-21 11:31:07
+  - @Description:
+    zap 日志库
+*/
 package main
 
 import (
@@ -17,5 +25,6 @@ func main() {
 		"attempt", 3,
 		"backoff", time.Second,
 	)
+
 	sugar.Infof("Failed to fetch URL: %s", url)
 }

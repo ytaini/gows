@@ -1,12 +1,30 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-07-16 06:20:04
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-21 16:35:52
+ * @Description:
+ */
 package mylogger
 
 import (
 	"fmt"
+	"log"
 	"time"
 )
 
 type ConsoleLogger struct {
 	logLevel
+}
+
+func NewConsoleLogger(logLevel level) (cl *ConsoleLogger) {
+	lLevel := parseLogLevel(logLevel)
+	if checkLogLevel(lLevel) {
+		log.Fatalf(errIllegal)
+	}
+	return &ConsoleLogger{
+		logLevel: lLevel,
+	}
 }
 
 func (cl *ConsoleLogger) log(ll logLevel, msg string, a ...any) {
@@ -15,24 +33,26 @@ func (cl *ConsoleLogger) log(ll logLevel, msg string, a ...any) {
 	}
 	msg = fmt.Sprintf(msg, a...)
 	now := time.Now()
-	timeString := now.Format("2006/01/02 15:04:05.000")
-	funcName, fileName, lineNo := getInfo(3)
 
-	fmt.Printf("[%s] [%-7s] [%s/%s():%d] %s\n", timeString, parseLogLevelString(ll), fileName, funcName, lineNo, msg)
+	timeString := now.Format(formatString)
+
+	funcName, fileName, lineNo := getInfo(3)
+	fmtStr := "[%s] [%-7s] [%s/%s():%d] %s\n"
+	fmt.Printf(fmtStr, timeString, parseLogLevelString(ll), fileName, funcName, lineNo, msg)
 }
 
 func (cl *ConsoleLogger) Debug(msg string, a ...any) {
-	cl.log(Debug, msg, a...)
+	cl.log(debug, msg, a...)
 }
 func (cl *ConsoleLogger) Info(msg string, a ...any) {
-	cl.log(Info, msg, a...)
+	cl.log(info, msg, a...)
 }
 func (cl *ConsoleLogger) Warning(msg string, a ...any) {
-	cl.log(Warning, msg, a...)
+	cl.log(warning, msg, a...)
 }
 func (cl *ConsoleLogger) Error(msg string, a ...any) {
-	cl.log(Error, msg, a...)
+	cl.log(err, msg, a...)
 }
 func (cl *ConsoleLogger) Fatal(msg string, a ...any) {
-	cl.log(Fatal, msg, a...)
+	cl.log(fatal, msg, a...)
 }
