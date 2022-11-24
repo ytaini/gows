@@ -1,3 +1,10 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-11-21 19:34:16
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-22 05:54:32
+ * @Description:
+ */
 package main
 
 import (
@@ -35,7 +42,7 @@ func f1() {
 	fmt.Printf("Sprint(p): %v\n", Sprint(int8(8)))
 }
 
-// 模拟fmt.print()
+// 模拟fmt.Println()
 // 当其他包调用这个函数时,他能把新创建的类型传进来,此时我们该如何判断形参的类型呢?
 func Sprint(x any) string {
 	type stringer interface {

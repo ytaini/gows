@@ -1,3 +1,10 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-11-21 19:34:03
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-22 08:12:02
+ * @Description:
+ */
 package main
 
 import (
@@ -19,22 +26,22 @@ func main() {
 		Num2: 5,
 	}
 
-	rTyp := reflect.TypeOf(v)
-	rVal := reflect.ValueOf(v)
+	rtyp := reflect.TypeOf(v)
+	rval := reflect.ValueOf(v)
 
-	typName := rVal.Type().Name()
+	typName := rtyp.Name()
 
-	for i := 0; i < rVal.NumField(); i++ {
-		fName := rTyp.Field(i).Name
-		fVal := rVal.Field(i).Int()
+	for i := 0; i < rtyp.NumField(); i++ {
+		fName := rtyp.Field(i).Name
+		fVal := rval.Field(i).Int()
 		fmt.Printf("%s 的 第 %d 个字段为 %s,字段值为 %d\n", typName, i, fName, fVal)
 	}
 
-	for i := 0; i < rVal.NumMethod(); i++ {
-		rm := rTyp.Method(i)
+	for i := 0; i < rtyp.NumMethod(); i++ {
+		rm := rtyp.Method(i)
 		funcName := rm.Name
 		args := []reflect.Value{reflect.ValueOf("Tom")}
-		rVal.MethodByName(funcName).Call(args)
+		rval.MethodByName(funcName).Call(args)
 	}
 
 }

@@ -48,8 +48,9 @@ func TestEg31(t *testing.T) {
 }
 
 /*
-	select 会随机检测各 case 语句中 channel 是否 ready，注意已关闭的 channel 也是可读的，
-		所以下面程序中select 不会阻塞，具体执行哪个 case 语句具是随机的。
+select 会随机检测各 case 语句中 channel 是否 ready，注意已关闭的 channel 也是可读的，
+
+	所以下面程序中select 不会阻塞，具体执行哪个 case 语句具是随机的。
 */
 func TestEg32(t *testing.T) {
 	chan1 := make(chan int)

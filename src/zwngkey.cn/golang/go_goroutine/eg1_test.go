@@ -1,7 +1,7 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-04-30 11:42:18
- * @LastEditTime: 2022-05-12 17:25:09
+ * @LastEditTime: 2022-11-24 11:23:39
  * @Description:
  */
 
@@ -10,6 +10,7 @@ package gogoroutine
 import (
 	"log"
 	"math/rand"
+	"sync"
 	"testing"
 	"time"
 )
@@ -19,7 +20,7 @@ import (
 		并发计算是指若干计算可能在某些时间片段内同时运行.
 		并行计算是指多个计算在任何时间点都在同时运行
 
-		协程有时也被称为绿色线程。绿色线程是由程序的运行时（runtime）维护的线程。
+		协程有时也被称为绿色线程。	绿色线程是由程序的运行时（runtime）维护的线程。
 			一个绿色线程的内存开销和情景转换（context switching）时耗比一个系统线程常常小得多。
 			 只要内存充足，一个程序可以轻松支持上万个并发协程。
 
@@ -47,38 +48,49 @@ func SayGreetings(greet string, count int) {
 func TestSayGreetings(t *testing.T) {
 	rand.Seed(time.Now().UnixNano())
 	log.SetFlags(log.Ldate | log.Ltime)
-	go SayGreetings("hi", 10)
-	go SayGreetings("go", 10)
-	time.Sleep(2 * time.Second)
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		SayGreetings("hi", 10)
+	}()
+	go func() {
+		defer wg.Done()
+		go SayGreetings("go", 10)
+	}()
+	wg.Wait()
 }
 
 /*
-	并发同步:(concurrency synchronization）
-		不同的并发计算可能共享一些资源，其中共享内存资源最为常见。
+并发同步:(concurrency synchronization）
 
-		在一个并发程序中，常常会发生下面的情形:
-			在一个计算向一段内存写数据的时候，另一个计算从此内存段读数据，结果导致读出的数据的完整性得不到保证。
-			在一个计算向一段内存写数据的时候，另一个计算也向此段内存写数据，结果导致被写入的数据的完整性得不到保证。
+	不同的并发计算可能共享一些资源，其中共享内存资源最为常见。
 
-		这些情形被称为数据竞争（data race）。
-		并发编程的一大任务就是要调度不同计算，控制它们对资源的访问时段，以使数据竞争的情况不会发生。
-		此任务常称为并发同步（或者数据同步）。Go支持几种并发同步技术.
+	在一个并发程序中，常常会发生下面的情形:
+		在一个计算向一段内存写数据的时候，另一个计算从此内存段读数据，结果导致读出的数据的完整性得不到保证。
+		在一个计算向一段内存写数据的时候，另一个计算也向此段内存写数据，结果导致被写入的数据的完整性得不到保证。
 
-	并发编程中的其它任务包括：
-		决定需要开启多少计算；
-		决定何时开启、阻塞、解除阻塞和结束哪些计算；
-		决定如何在不同的计算中分担工作负载。
+	这些情形被称为数据竞争（data race）。
+	并发编程的一大任务就是要调度不同计算，控制它们对资源的访问时段，以使数据竞争的情况不会发生。
+	此任务常称为并发同步（或者数据同步）。Go支持几种并发同步技术.
 
-	Go支持几种并发同步技术。 其中， 通道是最独特和最常用的。
-	但是，为了简单起见，这里我们将使用sync标准库包中的WaitGroup来同步上面这个程序中的主协程和两个新创建的协程。
-		WaitGroup类型有三个方法：Add、Done和Wait。
-			Add方法用来注册新的需要完成的任务数。
-			Done方法用来通知某个任务已经完成了。
-			一个Wait方法调用将阻塞（等待）到所有任务都已经完成之后才继续执行其后的语句。
+并发编程中的其它任务包括：
 
-		使用time.Sleep调用来做并发同步不是一个好的方法。
+	决定需要开启多少计算；
+	决定何时开启、阻塞、解除阻塞和结束哪些计算；
+	决定如何在不同的计算中分担工作负载。
+
+Go支持几种并发同步技术。 其中， 通道是最独特和最常用的。
+但是，为了简单起见，这里我们将使用sync标准库包中的WaitGroup来同步上面这个程序中的主协程和两个新创建的协程。
+
+	WaitGroup类型有三个方法：Add、Done和Wait。
+		Add方法用来注册新的需要完成的任务数。
+		Done方法用来通知某个任务已经完成了。
+		一个Wait方法调用将阻塞（等待）到所有任务都已经完成之后才继续执行其后的语句。
+
+	使用time.Sleep调用来做并发同步不是一个好的方法。
 */
-// var wg sync.WaitGroup
+var wg sync.WaitGroup
 
 func SayGreetings2(greet string, count int) {
 	defer wg.Done() // 通知当前任务已经完成。

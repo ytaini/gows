@@ -1,10 +1,11 @@
 /*
- * @Author: zwngkey
- * @Date: 2022-05-13 20:36:26
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-15 05:11:15
- * @Description:
-	通道用例大全
+- @Author: zwngkey
+- @Date: 2022-05-13 20:36:26
+- @LastEditors: wzmiiiiii
+- @LastEditTime: 2022-11-24 19:24:33
+- @Description:
+
+通道用例大全
 
 	通道同步技术比被很多其它语言采用的其它同步方案（比如角色模型和async/await模式）有着更多的应用场景和更多的使用变种。
 */
@@ -37,7 +38,8 @@ func sumSquares(num1, num2 int) int {
 }
 
 // 在下面这个例子中，sumSquares函数调用的两个实参的请求是并发进行的。 每个通道读取操作将阻塞到请求返回结果为止。
-//  两个实参总共需要大约3秒钟（而不是6秒钟）准备完毕（以较慢的一个为准）。
+//
+//	两个实参总共需要大约3秒钟（而不是6秒钟）准备完毕（以较慢的一个为准）。
 func Test(t *testing.T) {
 
 	ch1, ch2 := longTimeRequests(), longTimeRequests()
@@ -193,17 +195,17 @@ func Test19(t *testing.T) {
 */
 
 /*
-	脉搏器（ticker）
-		我们可以使用尝试发送操作来实现一个每隔一定时间发送一个信号的脉搏器。
+脉搏器（ticker）
 
+	我们可以使用尝试发送操作来实现一个每隔一定时间发送一个信号的脉搏器。
 */
-func Tick(d time.Duration) <-chan void {
-	ch := make(chan void, 1)
+func Tick(d time.Duration) <-chan struct{} {
+	ch := make(chan struct{}, 1)
 	go func() {
 		for {
 			time.Sleep(d)
 			select {
-			case ch <- void{}:
+			case ch <- struct{}{}:
 			default:
 			}
 		}
@@ -218,7 +220,7 @@ func Test20(t *testing.T) {
 }
 
 /*
-	time标准库包中的Tick函数提供了同样的功能，但效率更高。 我们应该使用标准库包中的实现。
+time标准库包中的Tick函数提供了同样的功能，但效率更高。 我们应该使用标准库包中的实现。
 */
 func Test21(t *testing.T) {
 	ti := time.Now()

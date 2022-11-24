@@ -1,8 +1,8 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-13 21:38:35
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-15 03:42:19
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-24 19:17:30
  * @Description:
  */
 package channelcase
@@ -40,7 +40,7 @@ func Test4(t *testing.T) {
 		sort.Slice(values, func(i, j int) bool {
 			return values[i] < values[j]
 		})
-		done <- void{} // 通知排序已完成
+		done <- struct{}{} // 通知排序已完成
 	}()
 
 	// 并发地做一些其它事情...
@@ -56,7 +56,7 @@ func Test4(t *testing.T) {
 // 直到另外一个协程从此通道接收一个值为止。 所以我们可以通过从一个通道接收数据来实现单对单通知。
 // 一般我们使用非缓冲通道来实现这样的通知。
 func Test5(t *testing.T) {
-	done := make(chan void)
+	done := make(chan struct{})
 	// 此信号通道也可以缓冲为1。如果这样，则在下面
 	// 这个协程创建之前，我们必须向其中写入一个值。
 
@@ -69,7 +69,7 @@ func Test5(t *testing.T) {
 		<-done
 	}()
 
-	done <- void{} // 阻塞在此，等待通知
+	done <- struct{}{} // 阻塞在此，等待通知
 	fmt.Println(" world!")
 
 }
@@ -79,18 +79,18 @@ func Test5(t *testing.T) {
 */
 
 // 多对单和单对多通知
-func worker(id int, ready chan void, done chan<- void) {
+func worker(id int, ready chan struct{}, done chan<- struct{}) {
 	<-ready // 阻塞在此，等待通知
 	log.Print("Worker#", id, "开始工作")
 	// 模拟一个工作负载。
 	time.Sleep(s * time.Duration(id+1))
 	log.Print("Worker#", id, "工作完成")
-	done <- void{} // 通知主协程（N-to-1）
+	done <- struct{}{} // 通知主协程（N-to-1）
 }
 
 func Test6(t *testing.T) {
 	log.SetFlags(log.Ltime)
-	ready, done := make(chan void), make(chan void)
+	ready, done := make(chan struct{}), make(chan struct{})
 	go worker(0, ready, done)
 	go worker(1, ready, done)
 	go worker(2, ready, done)
@@ -99,9 +99,9 @@ func Test6(t *testing.T) {
 	time.Sleep(s * 3 / 2)
 
 	//单对多通知.
-	ready <- void{}
-	ready <- void{}
-	ready <- void{}
+	ready <- struct{}{}
+	ready <- struct{}{}
+	ready <- struct{}{}
 
 	// 等待被多对单通知
 	<-done
@@ -128,7 +128,7 @@ func Test6(t *testing.T) {
 
 func Test7(t *testing.T) {
 	log.SetFlags(log.Ltime)
-	ready, done := make(chan void), make(chan void)
+	ready, done := make(chan struct{}), make(chan struct{})
 	go worker(0, ready, done)
 	go worker(1, ready, done)
 	go worker(2, ready, done)
@@ -148,11 +148,11 @@ func Test7(t *testing.T) {
 
 // 用通道实现一个一次性的定时通知器是很简单的。 下面是一个自定义实现：
 
-func afterDuration(d time.Duration) <-chan void {
-	ch := make(chan void, 1)
+func afterDuration(d time.Duration) <-chan struct{} {
+	ch := make(chan struct{}, 1)
 	go func() {
 		time.Sleep(d)
-		ch <- void{}
+		ch <- struct{}{}
 	}()
 	return ch
 }

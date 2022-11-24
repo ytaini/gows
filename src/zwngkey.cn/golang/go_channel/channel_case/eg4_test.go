@@ -1,11 +1,10 @@
 /*
- * @Author: zwngkey
- * @Date: 2022-05-15 03:01:17
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-15 03:57:53
- * @Description:
-
- */
+* @Author: zwngkey
+* @Date: 2022-05-15 03:01:17
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-24 19:17:45
+* @Description:
+*/
 package channelcase
 
 import (
@@ -68,7 +67,7 @@ func Test16(t *testing.T) {
 
 		此方法常用来查看某个期待中的通知是否已经来临。此通知将由另一个协程通过关闭一个通道来发送。
 */
-func IsClosed(c chan void) bool {
+func IsClosed(c chan struct{}) bool {
 	select {
 	case <-c:
 		return true

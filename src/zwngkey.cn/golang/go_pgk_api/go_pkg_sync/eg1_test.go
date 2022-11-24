@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-11 23:28:26
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-20 13:07:36
+ * @LastEditTime: 2022-11-23 21:07:15
  * @Description:
  */
 
@@ -114,8 +114,8 @@ type Singleton struct {
 	member int
 }
 
-var instance *Singleton
 var once sync.Once
+var instance *Singleton
 
 func getInstance() *Singleton {
 	/*
@@ -137,7 +137,7 @@ func TestEg2(t *testing.T) {
 	for i := 0; i < size; i++ {
 		go func() {
 			defer wg.Done()
-			instance = getInstance()
+			instance := getInstance()
 			fmt.Printf("%p\n", instance)
 		}()
 	}

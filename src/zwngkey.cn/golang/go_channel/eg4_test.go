@@ -1,11 +1,11 @@
 /*
- * @Author: zwngkey
- * @Date: 2022-05-06 23:23:48
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-07 00:16:15
- * @Description:
-  Go 语言 select 关键字常见的现象、数据结构以及实现原理。
+  - @Author: zwngkey
+  - @Date: 2022-05-06 23:23:48
 
+* @LastEditors: wzmiiiiii
+* @LastEditTime: 2022-11-24 17:38:32
+  - @Description:
+    Go 语言 select 关键字常见的现象、数据结构以及实现原理。
 */
 package gochannel
 
@@ -79,20 +79,5 @@ package gochannel
 */
 /*
 	实现原理:
-		select 语句在编译期间会被转换成 OSELECT 节点。每个 OSELECT 节点都会持有一组 OCASE 节点，
-			如果 OCASE 的执行条件是空，那就意味着这是一个 default 节点。
-
-		每一个 OCASE 既包含执行条件也包含满足条件后执行的代码。
-
-		编译器在中间代码生成期间会根据 select 中 case 的不同对控制语句进行优化，
-		 这一过程都发生在 cmd/compile/internal/gc.walkselectcases 函数中，我们在这里会分四种情况介绍处理的过程和结果：
-			1.select 不存在任何的 case；
-			2.select 只存在一个 case；
-			3.select 存在两个 case，其中一个 case 是 default；
-			4.select 存在多个 case；
-
-		上述四种情况不仅会涉及编译器的重写和优化，还会涉及 Go 语言的运行时机制，我们会从编译期间和运行时两个角度分析上述情况。
-
-
 		https://draveness.me/golang/docs/part2-foundation/ch05-keyword/golang-select/#%e7%9b%b4%e6%8e%a5%e9%98%bb%e5%a1%9e
 */
