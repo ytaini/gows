@@ -1,4 +1,11 @@
-// Package links provides a link-extraction function.
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-11-21 19:39:27
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-24 19:41:03
+ * @Description:
+ */
+// Package links provides a link-extraction(链接提取) function.
 package links
 
 import (
@@ -8,8 +15,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-// Extract makes an HTTP GET request to the specified URL, parses
-// the response as HTML, and returns the links in the HTML document.
+// Extract向指定的URL发起HTTP GET请求，将响应解析为HTML，并返回HTML文档中的链接。
 func Extract(url string) ([]string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
