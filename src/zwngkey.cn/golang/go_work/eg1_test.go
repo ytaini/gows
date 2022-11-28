@@ -1,11 +1,11 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-13 00:26:35
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-13 00:31:50
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-11-27 22:53:51
  * @Description:	go workspace mode
  */
-package goother
+package gowork
 
 /*
 	go.mod里使用replace指令的缺点:

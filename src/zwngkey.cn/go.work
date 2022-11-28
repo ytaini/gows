@@ -1,0 +1,10 @@
+go 1.19
+
+use (
+    ./dsaa
+    ./eggo
+    ./gobasic
+    ./golang
+    ./gopl
+    ./gin
+)
