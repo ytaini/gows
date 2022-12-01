@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-29 01:02:18
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-29 17:35:03
+ * @LastEditTime: 2022-11-29 20:16:30
  */
 package gee
 
@@ -14,8 +14,6 @@ import (
 
 type H map[string]any
 
-// 在 HandlerFunc 中，希望能够访问到解析的参数，因此，需要对 Context 对象增加一个属性和方法，
-// 来提供对路由参数的访问。我们将解析后的参数存储到Params中，通过c.Param("lang")的方式获取到对应的值。
 type Context struct {
 	W http.ResponseWriter
 	R *http.Request
@@ -25,6 +23,9 @@ type Context struct {
 	Params map[string]string
 	// response info
 	StatusCode int
+	// middleware
+	handlers []HandlerFunc
+	index    int
 }
 
 func newContext(w http.ResponseWriter, r *http.Request) *Context {
@@ -33,7 +34,21 @@ func newContext(w http.ResponseWriter, r *http.Request) *Context {
 		R:      r,
 		Path:   r.URL.Path,
 		Method: r.Method,
+		index:  -1,
 	}
+}
+
+func (c *Context) Next() {
+	c.index++
+	s := len(c.handlers)
+	for ; c.index < s; c.index++ {
+		c.handlers[c.index](c)
+	}
+}
+
+func (c *Context) Fail(code int, err string) {
+	c.index = len(c.handlers)
+	c.JSON(code, H{"message": err})
 }
 
 func (c *Context) Param(key string) string {

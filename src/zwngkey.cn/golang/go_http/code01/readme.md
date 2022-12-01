@@ -1,3 +1,5 @@
+https://geektutu.com/post/gee.html
+
 net/http提供了基础的Web功能，即监听端口，映射静态路由，解析HTTP报文。
 
 一些Web开发中简单的需求并不支持，需要手工实现。
@@ -12,3 +14,4 @@ Web 框架的需要的一些核心能力:
 - 工具集(Utilites)：提供对 cookies，headers 等处理机制。
 - 插件(Plugin)：Bottle本身功能有限，但提供了插件机制。可以选择安装到全局，也可以只针对某几个路由生效。
 - …
+

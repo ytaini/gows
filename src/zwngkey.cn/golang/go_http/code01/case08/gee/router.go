@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-29 01:33:45
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-29 17:48:12
+ * @LastEditTime: 2022-11-29 21:50:19
  */
 package gee
 
@@ -11,12 +11,6 @@ import (
 	"strings"
 )
 
-// 我们实现的动态路由具备以下两个功能:
-// - 参数匹配:。例如 /p/:lang/doc，可以匹配 /p/c/doc 和 /p/go/doc。
-// - 通配*。例如 /static/*filepath，可以匹配/static/fav.ico，也可以匹配/static/js/jQuery.js，这种模式常用于静态服务器，能够递归地匹配子路径。
-
-// 我们使用 roots 来存储每种请求方式的Trie 树根节点。
-// 使用 handlers 存储每个请求对应的 HandlerFunc
 type router struct {
 	roots    map[string]*node
 	handlers map[string]HandlerFunc
@@ -55,9 +49,6 @@ func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	r.handlers[key] = handler
 }
 
-// getRoute 函数中，还解析了:和*两种匹配符的参数，返回一个 map 。
-// 例如/p/go/doc匹配到/p/:lang/doc，解析结果为：{lang: "go"}，
-// /static/css/geektutu.css匹配到/static/*filepath，解析结果为{filepath: "css/geektutu.css"}。
 func (r *router) getRoute(method string, path string) (*node, map[string]string) {
 	searchParts := parsePattern(path)
 	params := make(map[string]string)
@@ -84,16 +75,17 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 	return nil, nil
 }
 
-func (r *router) getRoutes(method string) []*node {
+func (r *router) GetRoutes(method string) []*node {
 	root, ok := r.roots[method]
 	if !ok {
 		return nil
 	}
 	nodes := make([]*node, 0)
-	root.travel(&nodes)
+	root.Travel(&nodes)
 	return nodes
 }
 
+// handle 函数中，将从路由匹配得到的 Handler 添加到 c.handlers列表中，执行c.Next()。
 func (r *router) handle(c *Context) {
 	n, params := r.getRoute(c.Method, c.Path)
 	if n != nil {
@@ -101,8 +93,11 @@ func (r *router) handle(c *Context) {
 		// 这样就能够在handler中，通过Context对象访问到具体的值了。
 		c.Params = params
 		key := c.Method + "-" + n.pattern
-		r.handlers[key](c)
+		c.handlers = append(c.handlers, r.handlers[key])
 	} else {
-		http.NotFound(c.W, c.R)
+		c.handlers = append(c.handlers, func(c *Context) {
+			http.NotFound(c.W, c.R)
+		})
 	}
+	c.Next()
 }

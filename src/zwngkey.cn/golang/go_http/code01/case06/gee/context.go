@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-29 01:02:18
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-29 17:35:03
+ * @LastEditTime: 2022-11-29 17:51:05
  */
 package gee
 
@@ -14,8 +14,6 @@ import (
 
 type H map[string]any
 
-// 在 HandlerFunc 中，希望能够访问到解析的参数，因此，需要对 Context 对象增加一个属性和方法，
-// 来提供对路由参数的访问。我们将解析后的参数存储到Params中，通过c.Param("lang")的方式获取到对应的值。
 type Context struct {
 	W http.ResponseWriter
 	R *http.Request

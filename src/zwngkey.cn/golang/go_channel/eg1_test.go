@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-06 14:49:25
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-24 17:17:36
+ * @LastEditTime: 2022-11-30 14:27:24
  * @Description: go  channel使用.
  */
 package gochannel

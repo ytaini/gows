@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-29 01:33:45
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-29 17:48:12
+ * @LastEditTime: 2022-11-29 17:51:52
  */
 package gee
 
@@ -84,13 +84,13 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 	return nil, nil
 }
 
-func (r *router) getRoutes(method string) []*node {
+func (r *router) GetRoutes(method string) []*node {
 	root, ok := r.roots[method]
 	if !ok {
 		return nil
 	}
 	nodes := make([]*node, 0)
-	root.travel(&nodes)
+	root.Travel(&nodes)
 	return nodes
 }
 

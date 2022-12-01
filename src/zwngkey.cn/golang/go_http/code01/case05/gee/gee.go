@@ -2,11 +2,14 @@
  * @Author: wzmiiiiii
  * @Date: 2022-11-29 01:38:51
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-29 02:22:30
+ * @LastEditTime: 2022-11-29 13:54:45
  */
 package gee
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 //  使用 Trie 树实现动态路由(dynamic route)解析。
 //  支持两种模式:name和*filepath
@@ -22,6 +25,7 @@ func New() *Engine {
 }
 
 func (e *Engine) addRoute(method string, pattern string, handler HandlerFunc) {
+	log.Printf("Route %4s - %s", method, pattern)
 	e.router.addRoute(method, pattern, handler)
 }
 
