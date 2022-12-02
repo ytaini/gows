@@ -1,3 +1,5 @@
+[TOC]
+
 # 数据的逻辑结构
 ![](image/image_20221119062850642642.png)
 
@@ -64,10 +66,11 @@ G = (V,E). Graph = (Vertex,Edge)
 
 ## 图的类型定义
 
-- 图的抽象数据类型定义
+### 图的抽象数据类型定义
 
 ![](image/image_20221119095745781781.png)
-- 图的基本操作
+
+### 图的基本操作
 
 ![](image/image_20221119095846973973.png)
 
@@ -77,6 +80,7 @@ G = (V,E). Graph = (Vertex,Edge)
 
 ![](image/image_20221119100105789789.png)
 
+### 数组表示法(邻接矩阵)
 ![](image/image_202211191002540707.png)
 
 ![](image/image_20221119100707957957.png)
@@ -99,6 +103,7 @@ G = (V,E). Graph = (Vertex,Edge)
 ![](image/image_20221119102550262262.png)
 ![](image/image_20221119102723904904.png)
 
+### 邻接表(链式)
 ![](image/image_20221119103041836836.png)
 ![](image/image_20221119103321673673.png)
 
@@ -112,17 +117,22 @@ G = (V,E). Graph = (Vertex,Edge)
 
 ![](image//image_20221119104718413413.png)
 ![](image/image_202211191047559494.png)
+
 ![](image/image_20221119105039937937.png)
 ![](image/image_20221119105314815815.png) 
 
+### 邻接矩阵与邻接表表示法的关系
 ![](image/image_20221119105453527527.png)
 ![](image/image_20221119105656588588.png)
 
 ![](image/image_20221119105808282282.png)
 
+### 十字链表
 ![](image/image_20221119105854596596.png)
 ![](image/image_202211191107348383.png) 
 
+
+### 邻接多重表
 ![](image/image_20221119110920229229.png)
 ![](image/image_202211191116168888.png)
 
@@ -135,7 +145,7 @@ G = (V,E). Graph = (Vertex,Edge)
 ![](image/image_20221119111826523523.png)
 ![](image/image_20221119111938612612.png)
 
-- 深度优先搜索
+### 深度优先搜索
 
 ![](image/image_202211191123553939.png)
 ![](image/image_202211191126117474.png)
@@ -145,7 +155,7 @@ G = (V,E). Graph = (Vertex,Edge)
 ![](image/image_20221119113547191191.png)
 
 
-- 广度度优先搜索
+### 广度度优先搜索
 
 ![](image/image_20221119113816992992.png)
 ![](image/image_20221119113859328328.png)
