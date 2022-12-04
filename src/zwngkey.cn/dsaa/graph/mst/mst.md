@@ -1,5 +1,7 @@
 # 最小生成树
 
+https://www.cnblogs.com/skywang12345/p/3711496.html
+
 
 # 算法
 

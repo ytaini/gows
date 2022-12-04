@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-12-02 20:00:05
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-12-03 02:04:57
+ * @LastEditTime: 2022-12-05 00:12:02
  */
 
 // 基于尚硅谷java数据结构与算法p173
@@ -17,7 +17,7 @@ import (
 // 定义最大的权
 const INF = math.MaxInt
 
-// 通过邻接矩阵构建图
+// 通过邻接矩阵构建无向网
 type AMGraph struct {
 	vexNum, arcNum int     //图的当前顶点数和边数
 	vexs           []rune  //顶点表
