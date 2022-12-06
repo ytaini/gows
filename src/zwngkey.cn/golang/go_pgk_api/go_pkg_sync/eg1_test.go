@@ -2,7 +2,7 @@
  * @Author: zwngkey
  * @Date: 2022-05-11 23:28:26
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-23 21:07:15
+ * @LastEditTime: 2022-12-06 23:44:29
  * @Description:
  */
 
@@ -110,20 +110,18 @@ func print1(i int, s string) {
 }
 
 // sync.Once实现并发安全的单例
-type Singleton struct {
+type singleton struct {
 	member int
 }
 
 var once sync.Once
-var instance *Singleton
+var instance *singleton
 
-func getInstance() *Singleton {
-	/*
-	   通过sync.Once实现单例，只会生成一个Singleton实例
-	*/
+func GetInstance() *singleton {
+	// 通过sync.Once实现单例，只会生成一个Singleton实例
 	once.Do(func() {
 		fmt.Println("once")
-		instance = &Singleton{member: 100}
+		instance = &singleton{member: 100}
 	})
 	return instance
 }
@@ -132,12 +130,12 @@ func TestEg2(t *testing.T) {
 	size := 10
 	wg.Add(size)
 	/*
-	   多个goroutine同时去获取Singelton实例
+	   多个goroutine同时去获取Singleton实例
 	*/
 	for i := 0; i < size; i++ {
 		go func() {
 			defer wg.Done()
-			instance := getInstance()
+			instance := GetInstance()
 			fmt.Printf("%p\n", instance)
 		}()
 	}

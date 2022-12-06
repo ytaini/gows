@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-12-05 02:57:52
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-12-05 04:08:51
+ * @LastEditTime: 2022-12-05 19:28:33
  */
 package floyd
 
@@ -53,7 +53,12 @@ func (g *AMGraph) Vertexes(vers []rune) {
 	}
 	for i := 0; i < vexNum; i++ {
 		for j := 0; j < vexNum; j++ {
-			g.arcs[i][j] = INF
+			if i == j {
+				g.arcs[i][j] = 0
+			} else {
+				g.arcs[i][j] = INF
+			}
+
 		}
 	}
 	copy(g.vexs, vers)
@@ -120,7 +125,8 @@ func (g *AMGraph) Floyd() {
 	for i := 0; i < g.vexNum; i++ {
 		for j := 0; j < g.vexNum; j++ {
 			dist[i][j] = g.arcs[i][j]
-			path[i][j] = j
+			// path[i][j] = j //path[i][j]表示从Vi到Vj需要经过的点，初始化D[i][j]=j
+			path[i][j] = -1
 		}
 	}
 
@@ -128,7 +134,7 @@ func (g *AMGraph) Floyd() {
 	for k := 0; k < g.vexNum; k++ {
 		for i := 0; i < g.vexNum; i++ {
 			for j := 0; j < g.vexNum; j++ {
-				if i == j {
+				if i == j || k == i || k == j {
 					continue
 				}
 				// 如果经过下标为k顶点路径比原两点间路径更短，则更新dist[i][j]和path[i][j]
@@ -140,15 +146,25 @@ func (g *AMGraph) Floyd() {
 				}
 				if dist[i][j] > tmp {
 					dist[i][j] = tmp
-					path[i][j] = path[i][k]
+					path[i][j] = k
 				}
 			}
 		}
-		print(g.vexs, dist)
 	}
-
+	print(g.vexs, dist)
 	print(g.vexs, path)
+	fmt.Println(getPath(path, 0, 3)) // 0 5 5 4 4 3
 
+}
+
+// 求路径
+func getPath(path [][]int, i, j int) string {
+	if path[i][j] == -1 {
+		return fmt.Sprintf("<%d,%d>", i, j)
+	} else {
+		k := path[i][j]
+		return getPath(path, i, k) + " " + getPath(path, k, j) + " "
+	}
 }
 
 func print(vexs []rune, s [][]int) {

@@ -1,10 +1,11 @@
 /*
- * @Author: wzmiiiiii
- * @Date: 2022-11-16 21:31:25
- * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-11-16 21:32:42
- * @Description:
-	使用回溯法得到哈夫曼编码
+  - @Author: wzmiiiiii
+  - @Date: 2022-11-16 21:31:25
+
+* @LastEditors: wzmiiiiii
+* @LastEditTime: 2022-12-06 02:54:24
+  - @Description:
+    使用回溯法得到哈夫曼编码
 */
 package bt
 

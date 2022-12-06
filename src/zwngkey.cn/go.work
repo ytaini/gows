@@ -7,4 +7,5 @@ use (
     ./golang
     ./gopl
     ./gin
+    ./designpattern
 )
