@@ -2,7 +2,7 @@
  * @Author: wzmiiiiii
  * @Date: 2022-12-06 22:43:25
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-12-06 23:02:30
+ * @LastEditTime: 2022-12-07 17:11:39
  */
 package test
 
@@ -11,7 +11,7 @@ import (
 	"sync"
 	"testing"
 
-	"zwngkey.cn/designpattern/singleton/type1"
+	"zwngkey.cn/designpattern/creationalpattern/singleton/type1"
 )
 
 func Test(t *testing.T) {

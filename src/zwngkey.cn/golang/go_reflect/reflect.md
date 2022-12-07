@@ -5,6 +5,18 @@ reflect包实现了run-time(运行时)反射,允许程序操作任意类型的�
 
 调用`ValueOf`会 `returns a Value representing the run-time data`,`(Value)Zero`接受一个类型，并返回表示该类型的零值。
 
+
+```go
+func DeepEqual(a1, a2 interface{}) bool
+
+用来判断两个值是否深度一致：除了类型相同；在可以时（主要是基本类型）会使用==；但还会比较array、slice的成员，map的键值对，结构体字段进行深入比对。map的键值对，对键只使用==，但值会继续往深层比对。DeepEqual函数可以正确处理循环的类型。函数类型只有都会nil时才相等；空切片不等于nil切片；还会考虑array、slice的长度、map键值对数。
+
+
+func Copy(dst, src Value) int
+
+将src中的值拷贝到dst，直到src被耗尽或者dst被装满，要求这二者都是slice或array，且元素类型相同。
+```
+
 ## type Kind
 
 Kind代表Type类型值表示的具体分类。零值表示非法分类。

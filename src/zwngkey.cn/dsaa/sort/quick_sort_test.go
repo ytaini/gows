@@ -5,7 +5,7 @@
 
   - @LastEditors: wzmiiiiii
 
-  - @LastEditTime: 2022-12-07 04:18:46
+  - @LastEditTime: 2022-12-07 18:27:06
 
   - @Description:
     快速排序（Quicksort）是对冒泡排序的一种改进，借用了分治思想，选基准，依次将剩余元素的小于基准放其左侧，大的放右侧
@@ -188,7 +188,7 @@ func Test101(t *testing.T) {
 	fmt.Println(quickSort(arr)) // [1 2 3 4 5 6 7 8 9]
 }
 
-func Test102(t *testing.T) {
+func Test20(t *testing.T) {
 
 	seq1 := make([]int, 10000000)
 	seq := make([]int, 10000000)

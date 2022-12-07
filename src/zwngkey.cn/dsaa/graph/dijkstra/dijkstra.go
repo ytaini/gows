@@ -31,7 +31,7 @@ func NewEdge(v1, v2 rune, weight int) *Edge {
 	return &Edge{v1, v2, weight}
 }
 
-// 定义 边的切片
+// Edges 定义 边的切片
 type Edges []*Edge
 
 func (e Edges) Len() int           { return len(e) }

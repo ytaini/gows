@@ -2,9 +2,9 @@
  * @Author: wzmiiiiii
  * @Date: 2022-12-07 01:59:32
  * @LastEditors: wzmiiiiii
- * @LastEditTime: 2022-12-07 03:19:18
+ * @LastEditTime: 2022-12-07 22:19:06
  */
-package abstractfactorypattern
+package afp
 
 import (
 	"fmt"
@@ -114,11 +114,11 @@ func (f *Level2Factory) CreateBackground() Background {
 // 然后，定义了两个具体的工厂类型 Level1Factory 和 Level2Factory，它们实现了 LevelFactory 接口，
 // 并提供了创建不同等级中的敌人、道具和背景的具体方法。
 func Test(t *testing.T) {
-	Run(&Level1Factory{}) //通过等级1的工厂,创建等级1对应的敌人,道具,背景
-	Run(&Level2Factory{}) //通过等级2的工厂,创建等级2对应的敌人,道具,背景
+	Produce(&Level1Factory{}) //通过等级1的工厂,创建等级1对应的敌人,道具,背景
+	Produce(&Level2Factory{}) //通过等级2的工厂,创建等级2对应的敌人,道具,背景
 }
 
-func Run(factory LevelFactory) {
+func Produce(factory LevelFactory) {
 	enemy := factory.CreateEnemy()
 	enemy.Attack()
 	prop := factory.CreateProp()

@@ -7,6 +7,7 @@
 package type4
 
 import (
+	"fmt"
 	"sync"
 )
 
@@ -14,6 +15,10 @@ import (
 
 // sync.Once实现并发安全的单例
 type singleton struct{}
+
+func (s *singleton) Print() {
+	fmt.Println("asd")
+}
 
 var once sync.Once
 var instance *singleton

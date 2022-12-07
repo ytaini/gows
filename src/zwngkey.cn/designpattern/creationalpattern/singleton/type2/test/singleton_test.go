@@ -11,7 +11,7 @@ import (
 	"sync"
 	"testing"
 
-	"zwngkey.cn/designpattern/singleton/type2"
+	"zwngkey.cn/designpattern/creationalpattern/singleton/type2"
 )
 
 func Test2(t *testing.T) {
