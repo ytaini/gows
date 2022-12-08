@@ -1,7 +1,15 @@
+/*
+ * @Author: wzmiiiiii
+ * @Date: 2022-11-21 19:36:17
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2022-12-08 03:07:40
+ */
 package word
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPalindrome(t *testing.T) {
@@ -52,8 +60,7 @@ func TestIsPalindrome(t *testing.T) {
 		{"desserts", false},   // semi-palindrome
 	}
 	for _, test := range tests {
-		if got := IsPalindrome1(test.input); got != test.want {
-			t.Errorf("IsPalindrome(%q) = %v", test.input, got)
-		}
+		got := IsPalindrome1(test.input)
+		assert.Equal(t, got, test.want)
 	}
 }
