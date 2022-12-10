@@ -24,7 +24,7 @@ func (c *Car) Move() {
 	time.Sleep(time.Duration(randNum) * time.Second)
 }
 
-// 日志代理
+// LogProxy 日志代理
 type LogProxy struct {
 	m Movable
 }
@@ -41,7 +41,7 @@ func (p *LogProxy) Move() {
 	fmt.Println("end...")
 }
 
-// 计时代理
+// TimerProxy 计时代理
 type TimerProxy struct {
 	m Movable
 }

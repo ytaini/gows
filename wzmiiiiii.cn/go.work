@@ -4,4 +4,6 @@ use (
 	./project
 	./redis
 	./review
+	./questions
+	./leetcode
 )
