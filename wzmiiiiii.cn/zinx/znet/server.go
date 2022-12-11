@@ -2,9 +2,9 @@ package znet
 
 import (
 	"fmt"
-	"io"
-	"log"
 	"net"
+
+	"wzmiiiiii.cn/zinx/utils"
 	"wzmiiiiii.cn/zinx/ziface"
 )
 
@@ -18,81 +18,76 @@ type Server struct {
 	IP string
 	// 服务器监听的Port
 	Port int
+	// Server的消息管理模块,用来绑定MsgId和对应的处理函数
+	MsgHandles ziface.IMsgHandle
 }
 
-func NewServer(name string) ziface.IServer {
+const IPVersion = "tcp4"
+
+func NewServer() ziface.IServer {
 	server := &Server{
-		Name:      name,
-		IPVersion: "tcp4",
-		IP:        "0.0.0.0",
-		Port:      8999,
+		Name:       utils.Config.Name,
+		IPVersion:  IPVersion,
+		IP:         utils.Config.Host,
+		Port:       utils.Config.TcpPort,
+		MsgHandles: NewMsgHandle(),
 	}
 	return server
 }
 
 func (s *Server) Start() {
-	log.Printf("[Start] Server Listener at IP: %s, Port: %d, is starting\n", s.IP, s.Port)
+	sugaredLogger.Infof("[Start] Server Listener at IP: %s, Port: %d, is starting", s.IP, s.Port)
 
 	go func() {
 		// 1. 获取一个TCP的Addr
 		addr, err := net.ResolveTCPAddr(s.IPVersion, fmt.Sprintf("%s:%d", s.IP, s.Port))
 		if err != nil {
-			log.Fatalln("Resolve tcp addr error: ", err)
+			sugaredLogger.DPanicln("Resolve tcp addr error: ", err)
+			return
 		}
 		// 2. 监听服务器的地址
 		listener, err := net.ListenTCP(s.IPVersion, addr)
 
 		if err != nil {
-			log.Fatalf("Listen %s,err: %v", s.IPVersion, err)
+			sugaredLogger.DPanicln("err: %v", err)
+			return
 		} else {
 			defer func(listener *net.TCPListener) {
 				err := listener.Close()
 				if err != nil {
-					log.Println("listener close err:", err)
+					sugaredLogger.Errorln(err)
 				}
 			}(listener)
 		}
 
-		log.Printf("[Success] Start Zinx server success,serverName: %s, Listening...", s.Name)
+		sugaredLogger.Infof("[Success] Start Zinx server success,serverName: %s, Listening...", s.Name)
+
+		var cid uint32 = 0
 
 		// 3. 阻塞的等待客户端连接,处理客户端连接业务(读写)
 		for {
 			// 如果有客户端连接过来,阻塞会返回
 			conn, err := listener.AcceptTCP()
 			if err != nil {
-				log.Printf("Accept err: %v", err)
+				sugaredLogger.Errorf("Accept err: %v", err)
 				continue
 			}
 
-			log.Printf("Client Addr:%s connect...", conn.RemoteAddr())
+			sugaredLogger.Infof("Client Addr:%s connect...", conn.RemoteAddr())
 
-			// 已经与客户端建立连接,处理业务.
-			go process(conn)
+			// 将处理连接的业务方法和conn进行绑定 得到我们的连接模块.
+			dealConn := NewConnection(conn, cid, s.MsgHandles)
+			cid++
+
+			// 启动当前的连接业务处理.
+			go func() {
+				err := dealConn.Start()
+				if err != nil {
+					sugaredLogger.Errorln(err)
+				}
+			}()
 		}
 	}()
-}
-
-func process(conn *net.TCPConn) {
-	defer conn.Close()
-	for {
-		buf := make([]byte, 512)
-		cnt, err := conn.Read(buf)
-		if err != nil {
-			if err == io.EOF {
-				log.Printf("Client Addr:%s is leaving.. ", conn.RemoteAddr())
-			} else {
-				log.Println("recv buf err:", err)
-			}
-			return
-		}
-
-		log.Printf("Server read client info: %s,cnt:%d", string(buf[:cnt]), cnt)
-
-		if _, err := conn.Write(buf[0:cnt]); err != nil {
-			log.Printf("Server Write back buf err: %v", err)
-			continue
-		}
-	}
 }
 
 func (s *Server) Stop() {
@@ -107,4 +102,9 @@ func (s *Server) Server() {
 
 	// 阻塞状态
 	select {}
+}
+
+func (s *Server) AddRouter(msgId uint32, router ziface.IRouter) {
+	s.MsgHandles.AddRouter(msgId, router)
+	sugaredLogger.Infoln("Add Router Success...")
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	file, err := os.Open("./main.go")
+	file, err := os.Open("./logger.go")
 
 	if err != nil {
 		log.Fatalln("文件打开失败")

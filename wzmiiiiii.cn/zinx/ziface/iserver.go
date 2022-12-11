@@ -8,4 +8,6 @@ type IServer interface {
 	Stop()
 	// Server 运行服务器
 	Server()
+	// AddRouter 路由功能: 给当前的服务注册一个路由方法,供客户端的连接处理使用
+	AddRouter(uint32, IRouter)
 }

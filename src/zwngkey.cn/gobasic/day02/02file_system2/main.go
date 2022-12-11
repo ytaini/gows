@@ -16,7 +16,7 @@ import (
 )
 
 func readFile1() {
-	file, err := os.OpenFile("main.go", os.O_RDONLY, 0)
+	file, err := os.OpenFile("logger.go", os.O_RDONLY, 0)
 
 	if err != nil {
 		log.Fatalln("打开文件失败 err", err)
@@ -42,7 +42,7 @@ func readFile1() {
 }
 
 func readFile2() {
-	content, err := os.ReadFile("./main.go")
+	content, err := os.ReadFile("./logger.go")
 	if err != nil {
 		log.Fatalln(err)
 		return

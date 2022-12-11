@@ -34,7 +34,7 @@ func f1() {
 
 	// funcName := runtime.FuncForPC(pc).Name()
 	// fmt.Println(funcName) // main.f1
-	// fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/main.go
+	// fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/logger.go
 	// fmt.Println(line)     // 30
 	// fmt.Println(ok)       // true
 
@@ -42,7 +42,7 @@ func f1() {
 
 	// funcName := runtime.FuncForPC(pc).Name()
 	// fmt.Println(funcName) // main.main
-	// fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/main.go
+	// fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/logger.go
 	// fmt.Println(line)     // 27
 	// fmt.Println(ok)       // true
 
@@ -53,21 +53,21 @@ func f2() {
 	pc, file, line, ok := runtime.Caller(0)
 	funcName := runtime.FuncForPC(pc).Name()
 	fmt.Println(funcName) // main.f2
-	fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/main.go
+	fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/logger.go
 	fmt.Println(line)     // 50
 	fmt.Println(ok)       // true
 
 	// pc, file, line, ok := runtime.Caller(1)
 	// funcName := runtime.FuncForPC(pc).Name()
 	// fmt.Println(funcName) // main.f1
-	// fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/main.go
+	// fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/logger.go
 	// fmt.Println(line)     // 46
 	// fmt.Println(ok)       // true
 
 	// pc, file, line, ok := runtime.Caller(2)
 	// funcName := runtime.FuncForPC(pc).Name()
 	// fmt.Println(funcName) // main.main
-	// fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/main.go
+	// fmt.Println(file)     // /Users/imzw/gows/src/zwngkey.cn/golang/go_runtime/logger.go
 	// fmt.Println(line)     // 27
 	// fmt.Println(ok)       // true
 }

@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	ok, err := copyfile.CopyFile("main.go", "maincopy.go")
+	ok, err := copyfile.CopyFile("logger.go", "maincopy.go")
 	if !ok || err != nil {
 		log.Fatalln("拷贝失败!! err:", err)
 	}

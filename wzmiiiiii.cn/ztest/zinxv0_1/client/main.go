@@ -14,7 +14,12 @@ func main() {
 		log.Println("connect server err:", err)
 		return
 	}
-	defer conn.Close()
+	defer func(conn net.Conn) {
+		err := conn.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(conn)
 
 	for {
 		_, err := conn.Write([]byte("hello, zinxV0.1!"))

@@ -1,0 +1,1 @@
+2022-12-11T06:30:15.512+0800	ERROR	test3/main.go:65	Error fetching URL www.baidu.com : Error = Get "www.baidu.com": unsupported protocol scheme ""
