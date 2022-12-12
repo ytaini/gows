@@ -1,4 +1,4 @@
-package utils
+package zcfg
 
 import (
 	"encoding/json"
@@ -28,6 +28,10 @@ type GlobalConfig struct {
 	MaxPackageSize uint32 `json:"max_package_size" yaml:"max_package_size"`
 	// 日志位置
 	LogPath string `json:"log_path" yaml:"log_path"`
+	// worker池的goroutine数量
+	WorkerPoolSize uint32 `json:"worker_pool_size" yaml:"worker_pool_size"`
+	// 每个worker对应的消息队列的任务数量的最大值
+	MaxWorkerTaskLen uint32
 }
 
 // Config 定义一个全局的对外Config
@@ -37,19 +41,21 @@ var Config *GlobalConfig
 func init() {
 	// 默认值
 	Config = &GlobalConfig{
-		Name:           "ZinxServerApp",
-		Version:        "V0.4",
-		Host:           "0.0.0.0",
-		TcpPort:        8999,
-		MaxConn:        100,
-		MaxPackageSize: 4096,
-		LogPath:        "log/zinx.log",
+		Name:             "ZinxServerApp",
+		Version:          "V0.4",
+		Host:             "0.0.0.0",
+		TcpPort:          8999,
+		MaxConn:          100,
+		MaxPackageSize:   4096,
+		LogPath:          "log/zinx.log",
+		WorkerPoolSize:   10,
+		MaxWorkerTaskLen: 1024,
 	}
 
 	// 尝试从conf/zinx.json去加载一些用户自定义的参数.
 	if err := Config.reloadByYaml(); err != nil {
 		if err = Config.reloadByJson(); err != nil {
-			log.Println("lack config file...")
+			log.Println("lack zcfg file...")
 		}
 	}
 }

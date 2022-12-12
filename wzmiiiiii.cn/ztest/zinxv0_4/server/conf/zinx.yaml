@@ -1,5 +1,0 @@
-name: "zinx v0.4 demoServer yaml"
-host: "127.0.0.1"
-port: 8080
-max_conn: 10
-max_package_size: 1024

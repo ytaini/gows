@@ -19,17 +19,14 @@ func main() {
 	}
 	defer conn.Close()
 
-	var cnt uint32 = 1
-
 	for {
 		// 向服务器发送数据
 		dp := znet.NewDataPack()
-		binaryMsg, _ := dp.Pack(znet.NewMessage(cnt, []byte("ZinxV0.5 client Test msg")))
+		binaryMsg, _ := dp.Pack(znet.NewMessage(0, []byte("ZinxV0.6 client Test0 msg")))
 
 		if _, err := conn.Write(binaryMsg); err != nil {
-			log.Println("Client send msg fail,msgID:", cnt)
+			log.Println("Client send msg fail,msgID:", 0)
 		}
-		cnt++
 
 		// 接受服务器发送过来的数据
 		headData := make([]byte, dp.GetHeadLen())

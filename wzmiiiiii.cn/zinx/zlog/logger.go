@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"wzmiiiiii.cn/zinx/utils"
+	"wzmiiiiii.cn/zinx/zcfg"
 )
 
 var sugaredLogger *zap.SugaredLogger
@@ -22,7 +22,7 @@ func initLogger() {
 	writerSyncer1 := zapcore.AddSync(os.Stderr)
 
 	lumberjackLogger := &lumberjack.Logger{
-		Filename:   utils.Config.LogPath,
+		Filename:   zcfg.Config.LogPath,
 		MaxSize:    5,
 		MaxAge:     1,
 		MaxBackups: 5,

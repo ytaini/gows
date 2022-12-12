@@ -10,8 +10,8 @@ type Message struct {
 	Data []byte
 }
 
-func NewMessage(id uint32, data []byte) *Message {
-	return &Message{Id: id, Data: data, Len: uint32(len(data))}
+func NewMessage(msgId uint32, data []byte) *Message {
+	return &Message{Id: msgId, Data: data, Len: uint32(len(data))}
 }
 
 func (m *Message) GetMsgId() uint32 {

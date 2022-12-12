@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"wzmiiiiii.cn/zinx/utils"
+	"wzmiiiiii.cn/zinx/zcfg"
 	"wzmiiiiii.cn/zinx/ziface"
 )
 
@@ -55,7 +55,7 @@ func (d *DataPack) Unpack(data []byte) (ziface.IMessage, error) {
 		return nil, err
 	}
 	// 判断数据包长度是否已经超出了允许的最大包长度
-	maxSize := utils.Config.MaxPackageSize
+	maxSize := zcfg.Config.MaxPackageSize
 	if maxSize > 0 && msg.Len > maxSize {
 		return nil, errors.New("too large msg data recv")
 	}

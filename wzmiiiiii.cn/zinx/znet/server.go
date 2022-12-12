@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"wzmiiiiii.cn/zinx/utils"
+	"wzmiiiiii.cn/zinx/zcfg"
 	"wzmiiiiii.cn/zinx/ziface"
 )
 
@@ -20,17 +20,24 @@ type Server struct {
 	Port int
 	// Server的消息管理模块,用来绑定MsgId和对应的处理函数
 	MsgHandles ziface.IMsgHandle
+	// 连接管理器
+	ConnMgr ziface.IConnManager
+	// 创建连接之后自动调用的Hook函数
+	OnCreateConnAfter func(conn ziface.IConnection)
+	// 销毁连接之前自动调用的Hook函数
+	OnDestroyConnBefore func(conn ziface.IConnection)
 }
 
 const IPVersion = "tcp4"
 
 func NewServer() ziface.IServer {
 	server := &Server{
-		Name:       utils.Config.Name,
+		Name:       zcfg.Config.Name,
 		IPVersion:  IPVersion,
-		IP:         utils.Config.Host,
-		Port:       utils.Config.TcpPort,
+		IP:         zcfg.Config.Host,
+		Port:       zcfg.Config.TcpPort,
 		MsgHandles: NewMsgHandle(),
+		ConnMgr:    NewConnManager(),
 	}
 	return server
 }
@@ -39,6 +46,9 @@ func (s *Server) Start() {
 	sugaredLogger.Infof("[Start] Server Listener at IP: %s, Port: %d, is starting", s.IP, s.Port)
 
 	go func() {
+		// 开启worker pool.
+		s.MsgHandles.StartWorkerPool()
+
 		// 1. 获取一个TCP的Addr
 		addr, err := net.ResolveTCPAddr(s.IPVersion, fmt.Sprintf("%s:%d", s.IP, s.Port))
 		if err != nil {
@@ -52,12 +62,7 @@ func (s *Server) Start() {
 			sugaredLogger.DPanicln("err: %v", err)
 			return
 		} else {
-			defer func(listener *net.TCPListener) {
-				err := listener.Close()
-				if err != nil {
-					sugaredLogger.Errorln(err)
-				}
-			}(listener)
+			defer listener.Close()
 		}
 
 		sugaredLogger.Infof("[Success] Start Zinx server success,serverName: %s, Listening...", s.Name)
@@ -73,25 +78,30 @@ func (s *Server) Start() {
 				continue
 			}
 
-			sugaredLogger.Infof("Client Addr:%s connect...", conn.RemoteAddr())
+			// 是否超过最大连接数.
+			if s.ConnMgr.GetSize() >= zcfg.Config.MaxConn {
+				// TODO 给客户端响应一个超出最大连接的错误
+				sugaredLogger.Errorln("超出最大连接...")
+				conn.Close()
+				continue
+			}
+
+			sugaredLogger.Infof("[%04d] Client Addr:%s connect...", cid, conn.RemoteAddr())
 
 			// 将处理连接的业务方法和conn进行绑定 得到我们的连接模块.
-			dealConn := NewConnection(conn, cid, s.MsgHandles)
+			myConn := NewConnection(s, conn, cid, s.MsgHandles)
 			cid++
 
 			// 启动当前的连接业务处理.
-			go func() {
-				err := dealConn.Start()
-				if err != nil {
-					sugaredLogger.Errorln(err)
-				}
-			}()
+			go myConn.Start()
 		}
 	}()
 }
 
 func (s *Server) Stop() {
 	// TODO 将一些服务器的资源,状态或者一些已经开辟的连接信息 进行停止或者回收
+
+	s.ConnMgr.ClearAll()
 }
 
 func (s *Server) Server() {
@@ -107,4 +117,30 @@ func (s *Server) Server() {
 func (s *Server) AddRouter(msgId uint32, router ziface.IRouter) {
 	s.MsgHandles.AddRouter(msgId, router)
 	sugaredLogger.Infoln("Add Router Success...")
+}
+
+func (s *Server) GetConnMgr() ziface.IConnManager {
+	return s.ConnMgr
+}
+
+func (s *Server) RegisterOnCreateConnAfter(f func(conn ziface.IConnection)) {
+	s.OnCreateConnAfter = f
+}
+
+func (s *Server) RegisterOnDestroyConnBefore(f func(conn ziface.IConnection)) {
+	s.OnDestroyConnBefore = f
+}
+
+func (s *Server) CallOnCreateConnAfter(conn ziface.IConnection) {
+	if s.OnCreateConnAfter != nil {
+		sugaredLogger.Infof("OnCreateConnAfter exec...")
+		s.OnCreateConnAfter(conn)
+	}
+}
+
+func (s *Server) CallOnDestroyConnBefore(conn ziface.IConnection) {
+	if s.OnDestroyConnBefore != nil {
+		sugaredLogger.Infof("OnDestroyConnBefore exec...")
+		s.OnDestroyConnBefore(conn)
+	}
 }
