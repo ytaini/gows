@@ -55,8 +55,16 @@ func main() {
 	server := znet.NewServer()
 
 	// 注册Hook函数
-	server.RegisterOnCreateConnAfter(func(conn ziface.IConnection) {})
-	server.RegisterOnDestroyConnBefore(func(conn ziface.IConnection) {})
+	server.RegisterOnCreateConnAfter(func(conn ziface.IConnection) {
+		// 给当前连接设置一些属性.
+		conn.SetProperty("name", "张三")
+		logger.Infof("Set Property TO Connection: [name: %v]", "张三")
+	})
+	server.RegisterOnDestroyConnBefore(func(conn ziface.IConnection) {
+		// 获取当前连接的name属性
+		value, _ := conn.GetProperty("name")
+		logger.Infof("Get Property: [name: %v]", value)
+	})
 
 	// 给当前zinx框架添加一些自定义的router
 	server.AddRouter(0, &PingRouter{})

@@ -2,8 +2,10 @@ package znet
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"net"
+	"sync"
 
 	"wzmiiiiii.cn/zinx/ziface"
 )
@@ -25,6 +27,11 @@ type Connection struct {
 	MsgHandles ziface.IMsgHandle
 	// 无缓冲的管道,用于读写Goroutine之间的消息通信.
 	msgChan chan []byte
+
+	// 连接属性集合
+	property map[string]any
+	// 保护连接属性的锁
+	propLock sync.RWMutex
 }
 
 // NewConnection 初始化链接模块的方法
@@ -37,6 +44,7 @@ func NewConnection(server ziface.IServer, conn *net.TCPConn, connID uint32, msgH
 		isClosed:   false,
 		msgChan:    make(chan []byte),
 		ExitChan:   make(chan bool, 1),
+		property:   make(map[string]any),
 	}
 	// 将当前conn加入Connection Manager
 	con.Server.GetConnMgr().Add(con)
@@ -171,4 +179,26 @@ func (c *Connection) GetConnID() uint32 {
 
 func (c *Connection) RemoteAddr() net.Addr {
 	return c.Conn.RemoteAddr()
+}
+
+func (c *Connection) SetProperty(key string, val any) {
+	c.propLock.Lock()
+	defer c.propLock.Unlock()
+	c.property[key] = val
+}
+
+func (c *Connection) GetProperty(key string) (any, error) {
+	c.propLock.RLock()
+	defer c.propLock.RUnlock()
+	value, ok := c.property[key]
+	if !ok {
+		return nil, errors.New(fmt.Sprintf("prop [%v] NOT FOUND!", key))
+	}
+	return value, nil
+}
+
+func (c *Connection) RemoveProperty(key string) {
+	c.propLock.Lock()
+	defer c.propLock.Unlock()
+	delete(c.property, key)
 }

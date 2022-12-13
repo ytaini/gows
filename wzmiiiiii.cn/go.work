@@ -2,10 +2,11 @@ go 1.19
 
 use (
 	./leetcode
-	./ztest
 	./project
+	./protobufdemo
 	./questions
 	./redis
 	./review
 	./zinx
+	./ztest
 )

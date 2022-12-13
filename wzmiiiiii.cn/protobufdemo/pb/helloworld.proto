@@ -1,0 +1,37 @@
+// 指定protobuf的版本，proto3是最新的语法版本
+syntax = "proto3";
+package pb;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "../pb";
+
+message Person {
+  string name = 1;
+  int32 id = 2;  // Unique ID number for this person.
+  string email = 3;
+
+  // 在protobuf消息中定义数组类型，是通过在字段前面增加repeated关键词实现，标记当前字段是一个数组
+  repeated PhoneNumber phones = 4;
+
+  enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+
+  message PhoneNumber {
+    string number = 1;
+    PhoneType type = 2;
+  }
+
+  google.protobuf.Timestamp last_updated = 5;
+
+  map<string,string> prop = 6;
+}
+
+
+// Our address book file is just one of these.
+message AddressBook {
+  repeated Person people = 1;
+}
