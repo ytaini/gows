@@ -1,0 +1,15 @@
+d
+    8:announce
+        41:http://bttracker.debian.org:6969/announce
+    4:info
+     d
+        6:pieces
+            23:askfhjghahkfahjfgahfhsa
+        6:length
+            i351272960e
+        4:name
+            31:debian-10.2.0-amd64-netinst.iso
+        12:piece length
+            i262144e
+     e
+e

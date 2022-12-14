@@ -28,6 +28,6 @@ func indexHandleFunc(w http.ResponseWriter, r *http.Request) {
 	tm := template.New("index.html")
 	path, _ := os.Getwd() // 获取当前文件所在模块的路径: /Users/imzw/gows/wzmiiiiii.cn/project
 	logger.Println(path)
-	tm, _ = tm.ParseFiles(path + "/go-blog/template/index.html")
+	tm, _ = tm.ParseFiles(path + "/simple-blog/template/index.html")
 	_ = tm.Execute(w, "")
 }

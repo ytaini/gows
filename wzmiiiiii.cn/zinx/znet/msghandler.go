@@ -32,6 +32,7 @@ func (m *MsgHandle) DoMsgHandler(request ziface.IRequest) {
 	router, ok := m.routers[request.GetMsgId()]
 	if !ok {
 		sugaredLogger.Errorf("MsgId: %d is NOT FOUND! Need Register!!!", request.GetMsgId())
+		return
 	}
 	router.PreHandle(request)
 	router.Handle(request)

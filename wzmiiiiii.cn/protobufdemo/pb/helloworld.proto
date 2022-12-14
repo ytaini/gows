@@ -28,6 +28,12 @@ message Person {
   google.protobuf.Timestamp last_updated = 5;
 
   map<string,string> prop = 6;
+
+  oneof Data {
+    string Content = 7;
+    int32 ActionData = 8;
+    AddressBook Addr = 9;
+  }
 }
 
 

@@ -9,4 +9,6 @@ use (
 	./review
 	./zinx
 	./ztest
+	mysql-demo
+	sqlx-demo
 )

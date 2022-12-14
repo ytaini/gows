@@ -47,7 +47,7 @@ func Min(x, y int) int {
 	}
 }
 
-// FindMedianSortedArrays 通过插入排序思想,合并两个数组(归并也行)
+// FindMedianSortedArrays 先将两个数组合并(插入思想),然后根据奇数，还是偶数，返回中位数。
 func FindMedianSortedArrays(nums1 []int, nums2 []int) float64 {
 	l1, l2 := len(nums1), len(nums2)
 	tmps := make([]int, l1+l2)
@@ -69,4 +69,46 @@ func FindMedianSortedArrays(nums1 []int, nums2 []int) float64 {
 	//	(tmps[(l1+l2)/2] + tmps[(l1+l2-1)/2])/2 相当于两个相同的数字相加再除以2，还是其本身
 	// 当l1+l2为偶数时,计算tmps的中位数也是用 (tmps[(l1+l2)/2] + tmps[(l1+l2-1)/2])/2
 	return float64(tmps[(l1+l2)/2]+tmps[(l1+l2-1)/2]) / 2
+}
+
+// FindMedianSortedArrays2 先将两个数组合并(归并思想),然后根据奇数，还是偶数，返回中位数。
+func FindMedianSortedArrays2(nums1 []int, nums2 []int) float64 {
+	m := len(nums1)
+	n := len(nums2)
+	if m == 0 {
+		return float64(nums2[n/2]+nums2[(n-1)/2]) / 2
+	}
+	if n == 0 {
+		return float64(nums1[m/2]+nums1[(m-1)/2]) / 2
+	}
+	nums := make([]int, n+m)
+	count := 0
+	i, j := 0, 0
+	for count != (m + n) {
+		if i == m {
+			for j != n {
+				nums[count] = nums2[j]
+				count++
+				j++
+			}
+			break
+		}
+		if j == n {
+			for i != m {
+				nums[count] = nums1[i]
+				count++
+				i++
+			}
+			break
+		}
+		if nums1[i] < nums2[j] {
+			nums[count] = nums1[i]
+			i++
+		} else {
+			nums[count] = nums2[j]
+			j++
+		}
+		count++
+	}
+	return float64(nums[(n+m)/2]+nums[(n+m-1)/2]) / 2
 }
