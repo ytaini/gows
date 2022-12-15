@@ -153,7 +153,10 @@ sqlInjectDemo("xxx' and (select count(*) from user) <10 #")
 
 <br>
 
-> 补充：不同的数据库中，SQL语句使用的占位符语法不尽相同。
+> bindvars（绑定变量）
+
+查询占位符`?`在内部称为`bindvars`（查询占位符）,它非常重要。你应该始终使用它们向数据库发送值，因为它们可以防止SQL注入攻击。
+database/sql不尝试对查询文本进行任何验证；它与编码的参数一起按原样发送到服务器。除非驱动程序实现一个特殊的接口，否则在执行之前，查询是在服务器上准备的。
 
 |    数据库     |  占位符语法  |
 |:----------:|:-------:|
@@ -161,6 +164,19 @@ sqlInjectDemo("xxx' and (select count(*) from user) <10 #")
 | PostgreSQL | $1, $2等 |
 |   SQLite   |  ? 和$1  |
 |   Oracle   |  :name  |
+
+
+Other databases may vary. You can use the `sqlx.DB.Rebind(string)` string function with the ? bindvar syntax to get a query which is suitable for execution on your current database type.
+
+`bindvars`的一个常见误解是，它们用来在sql语句中插入值。它们其实仅用于参数化，不允许更改SQL语句的结构。例如，使用bindvars尝试参数化列或表名将不起作用：
+
+```go
+// ？不能用来插入表名（做SQL语句中表名的占位符）
+db.Query("SELECT * FROM ?", "mytable")
+ 
+// ？也不能用来插入列名（做SQL语句中列名的占位符）
+db.Query("SELECT ?, ? FROM people", "name", "location")
+```
 
 <br>
 

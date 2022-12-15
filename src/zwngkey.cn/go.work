@@ -6,6 +6,5 @@ use (
     ./gobasic
     ./golang
     ./gopl
-    ./gin
     ./designpattern
 )

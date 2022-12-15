@@ -2,13 +2,14 @@ go 1.19
 
 use (
 	./leetcode
+	./mysql-demo
 	./project
 	./protobufdemo
 	./questions
 	./redis
 	./review
+	./sqlx-demo
 	./zinx
 	./ztest
-	mysql-demo
-	sqlx-demo
+	gorm-demo
 )
