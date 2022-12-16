@@ -43,7 +43,7 @@ func TestEg22(t *testing.T) {
 	fmt.Printf("timeStamp1: %v\n", timeStamp1)
 	fmt.Printf("timeStamp2: %v\n", timeStamp2)
 
-	formatStr := "2006-01-02 15:04:05"
+	formatStr := "2006-01-02 15:04:05.000"
 	formatDate := now.Format(formatStr)
 	fmt.Printf("formatDate: %v\n", formatDate)
 

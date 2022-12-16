@@ -21,16 +21,19 @@ import (
 //	UpdatedAt    time.Time
 //}
 
+// UserInfo
+// 注意 对于声明了默认值的字段，像 0、”、false 等零值是不会保存到数据库。
+// 您需要使用指针类型或 Scanner/Valuer 来避免这个问题. 例如:
 type UserInfo struct {
 	ID           uint
 	Name         string
-	Email        *string
+	Email        *string // 这样
 	Age          uint8
 	Addr         *Addr `gorm:"embedded;embeddedPrefix:addr_"`
 	Birthday     time.Time
-	MemberNumber sql.NullString
-	ActivatedAt  sql.NullTime
-	CreatedAt    int64 `gorm:"autoCreateTime:milli"`
+	MemberNumber sql.NullString // 或这样
+	ActivatedAt  sql.NullTime   // 或这样
+	CreatedAt    int64          `gorm:"autoCreateTime:milli"`
 	UpdatedAt    int
 	flag         bool `gorm:"-:all"`
 }

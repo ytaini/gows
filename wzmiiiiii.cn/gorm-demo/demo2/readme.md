@@ -1,0 +1,5 @@
+- GORM 允许通过一个现有的数据库连接来初始化 *gorm.DB
+- MySQL 驱动程序提供了 一些高级配置 可以在初始化过程中使用
+- GORM 允许用户通过覆盖默认的NamingStrategy来更改命名约定，这需要实现接口 Namer
+  - 默认 NamingStrategy 也提供了几个选项
+- 注意：想要正确的处理 time.Time ，需要带上 parseTime 参数，要支持完整的 UTF-8 编码，需要将 charset=utf8 更改为 charset=utf8mb4

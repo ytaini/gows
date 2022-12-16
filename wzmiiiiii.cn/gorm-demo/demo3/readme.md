@@ -1,0 +1,2 @@
+- GORM 提供了 DB 方法，可用于从当前 *gorm.DB 返回一个通用的数据库接口 *sql.DB
+- GORM 使用 database/sql 维护连接池

@@ -1,0 +1,4 @@
+- 有关 gorm insert操作(创建记录)
+- GORM 允许用户定义的钩子有 BeforeSave, BeforeCreate, AfterSave, AfterCreate 等创建记录时将调用这些钩子方法
+- 如果想跳过 钩子 方法，您可以使用 SkipHooks 会话模式
+- DryRun模式
