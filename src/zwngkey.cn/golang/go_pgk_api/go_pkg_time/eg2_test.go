@@ -34,7 +34,7 @@ func TestEg22(t *testing.T) {
 	fmt.Println(now.Year())
 	fmt.Println(now.Month())
 	fmt.Println(now.Day())
-	fmt.Println(now.Hour())
+	fmt.Println(now.Hour())x
 	fmt.Println(now.Minute())
 	fmt.Println(now.Second())
 

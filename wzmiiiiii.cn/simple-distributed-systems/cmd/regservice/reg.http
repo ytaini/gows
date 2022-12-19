@@ -1,0 +1,7 @@
+POST http://localhost:3000/services
+Content-Type: application/json
+
+{
+  "service_name": "business service",
+  "service_url": "http://localhost:5000/business"
+}

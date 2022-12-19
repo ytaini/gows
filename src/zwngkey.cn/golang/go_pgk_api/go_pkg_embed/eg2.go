@@ -1,15 +1,16 @@
-package gopkgembed
+package main
 
 import (
 	"embed"
 	"log"
 )
 
-//这是一个指令,而不是普通的注释
+// 这是一个指令,而不是普通的注释
+//
 //go:embed test/*
 var f embed.FS
 
-func Testeg2() {
+func main() {
 	data, err := f.ReadFile("test/1.txt")
 	if err != nil {
 		log.Fatalln(err)

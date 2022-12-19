@@ -30,7 +30,7 @@ var (
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, usage, os.Args[0])
+		fmt.Fprintf(os.Stderr, usage+"\n", os.Args[0])
 	}
 	flag.IntVar(&r, "n", 1000, "")
 	flag.IntVar(&c, "c", 100, "")
@@ -54,6 +54,6 @@ func main() {
 
 func exit(msg string) {
 	flag.Usage()
-	fmt.Fprintln(os.Stderr, "\n[Error]: "+msg)
+	fmt.Fprintln(os.Stderr, "[Error]: "+msg)
 	os.Exit(1)
 }
