@@ -7,36 +7,41 @@ import (
 
 	"wzmiiiiii.cn/sds/logservice"
 
+	"wzmiiiiii.cn/sds/service"
+
 	"github.com/google/uuid"
 	"wzmiiiiii.cn/sds/registryservice"
 
-	"wzmiiiiii.cn/sds/grades"
-
-	"wzmiiiiii.cn/sds/service"
+	"wzmiiiiii.cn/sds/portal"
 )
 
 const (
+	port = "7000"
 	host = "localhost"
-	port = "6000"
 )
 
 var serviceAddr = fmt.Sprintf("http://%s:%s", host, port)
 
 func main() {
+	err := portal.ImportTemplates()
+	if err != nil {
+		log.Fatalln(err)
+	}
 	ri := registryservice.RegistryInfo{
 		ServiceID:        registryservice.ServiceID(uuid.NewString()),
+		ServiceName:      registryservice.PortalService,
 		ServicePort:      port,
 		ServiceHost:      host,
-		ServiceName:      registryservice.GradeService,
 		ServiceURL:       serviceAddr,
 		ServiceUpdateURL: serviceAddr + "/update",
 		HeartbeatURL:     serviceAddr + "/heartbeat",
 		RequiredServices: []registryservice.ServiceName{
 			registryservice.LogService,
+			registryservice.GradeService,
 		},
 	}
+	ctx, err := service.Start(context.Background(), ri, portal.RegisterHandlers)
 
-	ctx, err := service.Start(context.Background(), ri, grades.RegisterHandlers)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -45,6 +50,7 @@ func main() {
 		log.Printf("Logging service found at: %s\n", logProvider)
 		logservice.SetClientLogger(logProvider, ri.ServiceName)
 	}
+
 	<-ctx.Done()
 	log.Printf("Shutting down %s...\n", ri.ServiceName)
 }

@@ -13,4 +13,5 @@ use (
 	./ztest
 	./gorm-demo
 	./simple-distributed-systems
+	./go-web-demo
 )

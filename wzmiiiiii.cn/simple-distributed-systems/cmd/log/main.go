@@ -24,21 +24,22 @@ var serviceAddr = fmt.Sprintf("http://%s:%s", host, port)
 func main() {
 	logservice.Init("./distributed.log")
 
-	r := registryservice.RegistryInfo{
+	ri := registryservice.RegistryInfo{
 		ServiceID:        registryservice.ServiceID(uuid.NewString()),
 		ServiceName:      registryservice.LogService,
 		ServicePort:      port,
 		ServiceHost:      host,
 		ServiceURL:       serviceAddr,
 		ServiceUpdateURL: serviceAddr + "/update",
+		HeartbeatURL:     serviceAddr + "/heartbeat",
 		RequiredServices: make([]registryservice.ServiceName, 0),
 	}
 
-	ctx, err := service.Start(context.Background(), r, logservice.RegisterHandlerFunc)
+	ctx, err := service.Start(context.Background(), ri, logservice.RegisterHandlerFunc)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 	<-ctx.Done()
-	log.Printf("Shutting down %s...\n", registryservice.LogService)
+	log.Printf("Shutting down %s...\n", ri.ServiceName)
 }

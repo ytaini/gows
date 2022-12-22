@@ -7,11 +7,13 @@ import (
 	"log"
 	"net/http"
 	"sync"
+	"time"
 )
 
 const (
 	LogService      = "Log Service"
 	GradeService    = "Grade Service"
+	PortalService   = "Portald"
 	RegistryService = "Registry Service"
 )
 
@@ -27,6 +29,7 @@ type RegistryInfo struct {
 	ServiceHost      string        `json:"service_host"`
 	ServiceURL       string        `json:"service_url"`
 	ServiceUpdateURL string        `json:"service_update_url"`
+	HeartbeatURL     string        `json:"heartbeat_url"`
 	RequiredServices []ServiceName `json:"required_services"`
 }
 
@@ -49,7 +52,7 @@ func (r *register) add(ri *RegistryInfo) error {
 	if err := r.requestRequiredServices(ri); err != nil {
 		return err
 	}
-
+	// 通知依赖ri的那些服务.
 	r.notify(&patch{
 		Added: []*entry{
 			{Name: ri.ServiceName, URL: ri.ServiceURL},
@@ -73,7 +76,6 @@ func (r *register) requestRequiredServices(ri *RegistryInfo) error {
 			}
 		}
 	}
-
 	if err := r.sendPatch(&p, ri.ServiceUpdateURL); err != nil {
 		return err
 	}
@@ -88,6 +90,7 @@ func (r *register) sendPatch(p *patch, url string) error {
 	if res, err := http.Post(url, "application/json", bytes.NewBuffer(data)); err != nil {
 		return err
 	} else {
+		log.Println(res.StatusCode)
 		if res.StatusCode != http.StatusOK {
 			return fmt.Errorf("request required service failed")
 		}
@@ -141,6 +144,47 @@ func (r *register) remove(serviceId ServiceID) error {
 		}
 	}
 	return fmt.Errorf("ServiceId: [%s] NOT FOUNT !!! ", serviceId)
+}
+
+func (r *register) heartbeat(freq time.Duration) {
+	for {
+		var wg sync.WaitGroup
+		for _, reg := range r.registryInfos {
+			wg.Add(1)
+			go func(reg *RegistryInfo) {
+				defer wg.Done()
+				success := true
+				for attemps := 0; attemps < 3; attemps++ {
+					res, err := http.Get(reg.HeartbeatURL)
+					if err != nil {
+						log.Println(err)
+					} else if res.StatusCode == http.StatusOK {
+						log.Println("Heartbeat check passed for", reg.ServiceName)
+						if !success {
+							r.add(reg)
+						}
+						break
+					}
+					log.Println("Heartbeat check passed for", reg.ServiceName)
+					if success {
+						success = false
+						r.remove(reg.ServiceID)
+					}
+					time.Sleep(1 * time.Second)
+				}
+			}(reg)
+			wg.Wait()
+			time.Sleep(freq)
+		}
+	}
+}
+
+var once sync.Once
+
+func SetupRegistryService() {
+	once.Do(func() {
+		go reg.heartbeat(3 * time.Second)
+	})
 }
 
 type entry struct {

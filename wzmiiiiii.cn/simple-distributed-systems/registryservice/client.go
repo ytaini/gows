@@ -49,6 +49,7 @@ func DeregisterServer(serviceId ServiceID) error {
 type serviceUpdateHandler struct{}
 
 func (*serviceUpdateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Println("test1")
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -68,6 +69,17 @@ func UpdateHandler(path string) error {
 		return err
 	}
 	http.Handle(serviceUpdateURL.Path, &serviceUpdateHandler{})
+	return nil
+}
+
+func HeartbeatHandler(path string) error {
+	heartbeatURL, err := url.Parse(path)
+	if err != nil {
+		return err
+	}
+	http.HandleFunc(heartbeatURL.Path, func(writer http.ResponseWriter, request *http.Request) {
+		writer.WriteHeader(http.StatusOK)
+	})
 	return nil
 }
 

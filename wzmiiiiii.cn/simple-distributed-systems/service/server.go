@@ -12,6 +12,10 @@ import (
 func Start(ctx context.Context, reg registryservice.RegistryInfo,
 	registerHandlerFunc func()) (context.Context, error) {
 
+	if err := registryservice.HeartbeatHandler(reg.HeartbeatURL); err != nil {
+		return ctx, err
+	}
+
 	if err := registryservice.UpdateHandler(reg.ServiceUpdateURL); err != nil {
 		return ctx, err
 	}
@@ -20,7 +24,7 @@ func Start(ctx context.Context, reg registryservice.RegistryInfo,
 
 	ctx = startService(ctx, reg)
 
-	// 服务注册
+	//服务注册
 	if err := registryservice.RegistryServer(reg); err != nil {
 		return ctx, err
 	}
