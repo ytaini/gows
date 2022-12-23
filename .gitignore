@@ -2,4 +2,5 @@
 /pkg
 .vscode
 .idea
-*/ppt
+*.pdf
+*.zip

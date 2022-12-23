@@ -1,0 +1,6 @@
+### Without Auth
+GET http://localhost:8080/test
+
+### With Auth
+GET http://localhost:8080/test
+Authorization: abc

@@ -188,7 +188,7 @@ func deleteRowDemo() {
 // DB.NamedExec方法用来绑定SQL语句与结构体或map中的同名字段。
 func insertUserDemo() (err error) {
 	sqlStr := `insert into user (name, age) values (:name,:age)`
-	_, err = db.NamedQuery(sqlStr, map[string]any{
+	_, err = db.NamedExec(sqlStr, map[string]any{
 		"name": "老刘",
 		"age":  123,
 	})

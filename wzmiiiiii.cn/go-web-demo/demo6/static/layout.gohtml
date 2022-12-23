@@ -13,7 +13,11 @@
     <nav class="navbar navbar-dark bg-primary">
         <a href="#" class="navbar-brand">NavBar</a>
     </nav>
-    {{ template "content" . }}
+    <!--{{ template "content" . }} -->
+    {{ block "content" . }}
+        template action: 模版必须可用.<br>
+        block action: 模版可以不存在.当模版不存在时,会显示这里的代码.<br>
+    {{ end }}
 </body>
 </html>
 {{ end }}
