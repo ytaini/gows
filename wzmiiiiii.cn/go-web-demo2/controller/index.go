@@ -6,17 +6,23 @@ package controller
 
 import (
 	"net/http"
-	"text/template"
 )
 
 func indexRoute() {
 	http.Handle("/", http.RedirectHandler("/index", http.StatusSeeOther))
 	http.HandleFunc("/index", indexHandlerFunc)
 }
+
 func indexHandlerFunc(w http.ResponseWriter, r *http.Request) {
-	t := template.Must(template.ParseFiles("view/index.gohtml"))
-	if err := t.Execute(w, nil); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+	var err error
+	defer handleError(w, err)
+	switch r.Method {
+	case http.MethodGet:
+		if err = indexHandlerGet(w); err != nil {
+			return
+		}
 	}
+}
+func indexHandlerGet(w http.ResponseWriter) error {
+	return parseTemplate(w, "", "view/index.gohtml")
 }

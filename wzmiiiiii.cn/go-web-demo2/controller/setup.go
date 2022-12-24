@@ -10,10 +10,10 @@ func RegisterRoutes() {
 	indexRoute()
 	loginRoute()
 	registerRoute()
+	managerRoute()
 	staticRoute()
 }
 
 func staticRoute() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("view/static/"))))
-	http.Handle("/pages/", http.StripPrefix("/pages/", http.FileServer(http.Dir("view/pages/"))))
 }

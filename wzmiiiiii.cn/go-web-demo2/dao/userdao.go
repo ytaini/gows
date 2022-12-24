@@ -6,7 +6,6 @@ package dao
 
 import (
 	"database/sql"
-	"errors"
 
 	"wzmiiiiii.cn/gwd2/common"
 	"wzmiiiiii.cn/gwd2/model"
@@ -17,7 +16,7 @@ func UserAuthentication(username, passwd string) (user *model.User, err error) {
 	user = &model.User{}
 	sqlStr := `select * from users where username = ? and passwd = ?`
 	err = common.Db.Get(user, sqlStr, username, passwd)
-	if errors.As(err, &sql.ErrNoRows) {
+	if err == sql.ErrNoRows {
 		return nil, nil
 	}
 	return
@@ -27,7 +26,7 @@ func CheckUserName(username string) (ok bool, err error) {
 	user := model.User{}
 	sqlStr := `select * from users where username = ?`
 	if err = common.Db.Get(&user, sqlStr, username); err != nil {
-		if errors.As(err, &sql.ErrNoRows) {
+		if err == sql.ErrNoRows {
 			return false, nil
 		}
 		return false, err

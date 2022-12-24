@@ -24,13 +24,13 @@
 			<img class="logo_img" alt="" src="/static/img/logo.gif" >
 			<span class="wel_word">编辑图书</span>
 			<div>
-				<a href="/pages/manager/book_manager.html">图书管理</a>
-				<a href="/go-web-demo2/view/static">返回商城</a>
+				<a href="/book/manager">图书管理</a>
+				<a href="/index">返回商城</a>
 			</div>
 		</div>
 		
 		<div id="main">
-			<form action="/pages/manager/book_manager.html" method="POST">
+			<form action="/book/add" method="POST">
 				<table>
 					<tr>
 						<td>名称</td>
@@ -42,10 +42,10 @@
 					</tr>		
 					<tr>
 						<td><input name="title" type="text" value="时间简史"/></td>
-						<td><input name="price" type="text" value="30.00"/></td>
+						<td><input name="price" type="number" value="30.00"/></td>
 						<td><input name="author" type="text" value="霍金"/></td>
-						<td><input name="sales" type="text" value="200"/></td>
-						<td><input name="stock" type="text" value="300"/></td>
+						<td><input name="sales" type="number" value="200"/></td>
+						<td><input name="stock" type="number" value="300"/></td>
 						<td><input type="submit" value="提交"/></td>
 					</tr>		
 				</table>
