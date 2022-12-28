@@ -1,6 +1,10 @@
 go 1.19
 
 use (
+	./gin-demo
+	./go-web-demo
+	./go-web-demo2
+	./gorm-demo
 	./leetcode
 	./mysql-demo
 	./project
@@ -8,11 +12,8 @@ use (
 	./questions
 	./redis
 	./review
+	./simple-distributed-systems
 	./sqlx-demo
 	./zinx
 	./ztest
-	./gorm-demo
-	./simple-distributed-systems
-	./go-web-demo
-	./go-web-demo2
 )
