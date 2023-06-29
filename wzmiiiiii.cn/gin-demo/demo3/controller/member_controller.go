@@ -27,10 +27,8 @@ func (mc *MemberController) sendSmsCode(c *gin.Context) {
 		c.JSON(http.StatusOK, tool.NewResponse(tool.Fail, nil, "缺少查询参数: phone"))
 		return
 	}
-
 	ms := &service.MemberService{}
-	ok := ms.SendSms(phone)
-	if ok {
+	if err := ms.SendSms(phone); err == nil {
 		c.JSON(http.StatusOK, tool.NewResponse(tool.Success, nil, "发送成功"))
 	} else {
 		c.JSON(http.StatusOK, tool.NewResponse(tool.Fail, nil, "发送失败"))
