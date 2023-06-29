@@ -1,8 +1,8 @@
 /*
  * @Author: zwngkey
  * @Date: 2022-05-05 18:02:42
- * @LastEditors: zwngkey 18390924907@163.com
- * @LastEditTime: 2022-05-05 18:48:24
+ * @LastEditors: wzmiiiiii
+ * @LastEditTime: 2023-06-30 00:06:42
  * @Description: time包的api
  */
 package gopkgtime
@@ -34,7 +34,7 @@ func TestEg22(t *testing.T) {
 	fmt.Println(now.Year())
 	fmt.Println(now.Month())
 	fmt.Println(now.Day())
-	fmt.Println(now.Hour())x
+	fmt.Println(now.Hour())
 	fmt.Println(now.Minute())
 	fmt.Println(now.Second())
 
